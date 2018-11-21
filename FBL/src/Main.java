@@ -10,7 +10,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FBL.fxml"));
         primaryStage.setTitle("FacebookLite");
-        primaryStage.setScene(new Scene(root, 1920, 1005));
+        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
 
