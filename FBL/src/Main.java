@@ -11,6 +11,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FBL.fxml"));
         primaryStage.setTitle("FacebookLite");
         primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
