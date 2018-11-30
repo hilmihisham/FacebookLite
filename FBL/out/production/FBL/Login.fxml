@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+    <children>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="607.0" prefWidth="811.0" VBox.vgrow="ALWAYS">
+            <children>
+                <AnchorPane layoutX="144.0" layoutY="187.0" prefHeight="297.0" prefWidth="560.0" AnchorPane.bottomAnchor="114.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="187.0">
+                    <children>
+                        <TextField layoutX="28.0" layoutY="49.0" prefHeight="39.0" prefWidth="530.0" promptText="User Name" />
+                        <PasswordField layoutX="28.0" layoutY="97.0" prefHeight="27.0" prefWidth="530.0" promptText="Password" />
+                        <Button layoutX="28.0" layoutY="149.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="140.0" text="Log In" />
+                        <Button layoutX="184.0" layoutY="149.0" mnemonicParsing="false" onAction="#register" prefHeight="38.0" prefWidth="140.0" text="Register" />
+                        <Button layoutX="358.0" layoutY="149.0" mnemonicParsing="false" onAction="#forgotpassword" prefHeight="38.0" prefWidth="200.0" text="Forgot Password" />
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                </AnchorPane>
+            </children>
+            <effect>
+                <Lighting>
+                    <bumpInput>
+                        <Shadow />
+                    </bumpInput>
+                    <light>
+                        <Light.Distant color="#59e8eb" />
+                    </light>
+                </Lighting>
+            </effect>
+        </AnchorPane>
+    </children>
+    <padding>
+        <Insets right="2.0" top="2.0" />
+    </padding>
+</VBox>
