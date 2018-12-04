@@ -36,4 +36,12 @@ public class GUIManager {
         login.initialize(this,fbl);
         scene.setRoot(root);
     }
+
+    public void loadProfilePage() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+        Parent root = loader.load();
+        ProfileUIController profile = loader.getController();
+        profile.initialize(this,fbl);
+        scene.setRoot(root);
+    }
 }
