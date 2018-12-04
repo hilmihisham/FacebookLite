@@ -43,5 +43,15 @@ public class GUIManager {
         ProfileUIController profile = loader.getController();
         profile.initialize(this,fbl);
         scene.setRoot(root);
+
     }
+    public void loadForgotPasswordPage() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ForgotPassword.fxml"));
+        Parent root = loader.load();
+        RegisterController register = loader.getController();
+        register.initialize(this,fbl);
+        scene.setRoot(root);
+    }
+
+
 }
