@@ -23,11 +23,11 @@ public class RegisterController {
         this.fbl = fbl;
     }
 
-    public void back() throws Exception{
+    public void back() throws Exception {
         gui.loadLoginPage();
     }
 
-    public void register(){
+    public void register() {
         //need to check that all fields aren't empty and are properly formatted
         //if not, there needs to be a warning message on the UI
 
