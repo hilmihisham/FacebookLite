@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="789d5150-24ab-4596-9178-7e3fc56e4dc7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FBL/CommonStyles.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FBL/CommonStyles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FBL/DatabaseController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FBL/DatabaseController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FBL/Register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FBL/Register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FBL/RegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FBL/RegisterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CommonStyles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/CommonStyles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DatabaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DatabaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/WiredTiger.turtle" beforeDir="false" afterPath="$PROJECT_DIR$/../data/WiredTiger.turtle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/WiredTiger.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/WiredTiger.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/collection-2--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/collection-2--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/collection-4--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/collection-4--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/collection-7--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/collection-7--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/index-3--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/index-3--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/index-5--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/index-5--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/index-6--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/index-6--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/index-8--2436636520948096007.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/index-8--2436636520948096007.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/journal/WiredTigerLog.0000000002" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/sizeStorer.wt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/sizeStorer.wt" afterDir="false" />
-    </list>
+    <list default="true" id="789d5150-24ab-4596-9178-7e3fc56e4dc7" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +73,7 @@
     <session id="1043121788">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.12" value="2" />
           <entry key="project.open.time.13" value="1" />
@@ -474,7 +451,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="2552" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13326226" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />

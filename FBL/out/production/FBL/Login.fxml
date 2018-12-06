@@ -5,11 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
     <top>
         <AnchorPane prefHeight="240.0" prefWidth="800.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
             <children>
@@ -18,6 +20,11 @@
                         <Font name="System Bold" size="22.0" />
                     </font>
                 </Label>
+            <ImageView fitHeight="243.0" fitWidth="314.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Resources/flogo.jpg" />
+               </image>
+            </ImageView>
             </children>
         </AnchorPane>
     </top>

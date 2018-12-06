@@ -37,21 +37,27 @@ public class GUIManager {
         scene.setRoot(root);
     }
 
-    public void loadProfilePage() throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+    public void loadForgotPasswordPage() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ForgotPassword.fxml"));
+        Parent root = loader.load();
+        ForgotPasswordController forgot = loader.getController();
+        forgot.initialize(this,fbl);
+        scene.setRoot(root);
+    }
+
+    public void loadHomePage() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePageUI.fxml"));
+        Parent root = loader.load();
+        HomePageUIController home = loader.getController();
+        home.initialize(this,fbl);
+        scene.setRoot(root);
+    }
+
+    public void loadProfileUIPage() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileUI.fxml"));
         Parent root = loader.load();
         ProfileUIController profile = loader.getController();
         profile.initialize(this,fbl);
         scene.setRoot(root);
-
     }
-    public void loadForgotPasswordPage() throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ForgotPassword.fxml"));
-        Parent root = loader.load();
-        RegisterController register = loader.getController();
-        register.initialize(this,fbl);
-        scene.setRoot(root);
-    }
-
-
 }
