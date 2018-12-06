@@ -18,7 +18,6 @@ public class LoginController {
     }
 
     public void forgotpassword() throws Exception{
-        System.out.println("forgot password lol rip XD");
         gui.loadForgotPasswordPage();
     }
 
@@ -26,11 +25,13 @@ public class LoginController {
         gui.loadRegisterPage();
     }
 
-    public void login() {
+    public void login() throws Exception{
         //need to make sure both fields are filled and then validate with database
         //should display warning somewhere if field not filled or login doesn't work
 
         //userName.getText();
         //password.getText();
+
+        gui.loadHomePage();
     }
 }
