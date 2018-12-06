@@ -1,40 +1,115 @@
+import com.mongodb.MongoException;
+import com.mongodb.MongoSocketOpenException;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+
+import java.net.ConnectException;
 
 public class RegisterController {
 
     GUIManager gui;
     FBLManager fbl;
+    DatabaseController dbc;
 
     @FXML
     TextField firstName;
     @FXML
     TextField lastName;
     @FXML
-    TextField userName;
+    TextField username;
     @FXML
     PasswordField password;
     @FXML
     TextField age;
+    @FXML
+    TextField secureQuestion;
+    @FXML
+    TextField secureAnswer;
 
     public void initialize(GUIManager gui, FBLManager fbl){
         this.gui = gui;
         this.fbl = fbl;
+
+        // add focus listener to age TextField
+        age.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue) { // if age TextField focus lost
+                ageInputDone();
+            }
+        }));
     }
 
     public void back() throws Exception {
         gui.loadLoginPage();
     }
 
+    public void ageInputDone() {
+
+        int ageInput;
+
+        try {
+            ageInput = Integer.parseInt(age.getText());
+        } catch (NumberFormatException e) {
+            // show dialog of error input
+            age.getStyleClass().add("errorInput");
+            age.clear();
+            age.setPromptText("Use numbers only");
+        }
+    }
+
     public void register() {
         //need to check that all fields aren't empty and are properly formatted
         //if not, there needs to be a warning message on the UI
 
-        //firstName.getText();
-        //lastName.getText();
-        //username.getText();
-        //password.getText()
-        //age.getText();
+        boolean inputComplete = true;
+        String[] input = new String[6];
+
+        input[0] = username.getText();
+        input[1] = password.getText();
+        input[2] = firstName.getText();
+        input[3] = lastName.getText();
+        input[4] = secureQuestion.getText();
+        input[5] = secureAnswer.getText().toLowerCase();
+
+        // checking if all TextField is filled
+        for (String data: input) {
+            if (data.equals("")) {
+                System.out.println("data = " + data);
+                inputComplete = false;
+            }
+        }
+
+        if (inputComplete && (!age.getText().equals(""))) {
+            int inputAge = Integer.parseInt(age.getText());
+            System.out.println("all green to register!");
+
+            // opening connection to database
+            try {
+                registerToDB();
+            } catch (MongoException me) {
+                System.out.println("Cannot connect to database");
+                dbc.closeConnection();
+                return;
+            }
+
+            // registering user to database
+            if (dbc != null) {
+                dbc.RegisterNewUser(input[0], input[1], input[2], input[3], input[4], input[5], inputAge);
+                dbc.closeConnection();
+            }
+
+            // call popup window to confirm registration complete (?)
+
+            // get back to login page
+            try {
+                back();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void registerToDB() throws MongoException {
+        dbc = new DatabaseController();
     }
 }

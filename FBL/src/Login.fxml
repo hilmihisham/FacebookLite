@@ -24,7 +24,7 @@
     <center>
      <AnchorPane prefHeight="297.0" prefWidth="560.0" BorderPane.alignment="CENTER">
         <children>
-           <TextField fx:id="userName" layoutX="135.0" layoutY="50.0" prefHeight="30.0" prefWidth="530.0" promptText="User Name" />
+           <TextField fx:id="username" layoutX="135.0" layoutY="50.0" prefHeight="30.0" prefWidth="530.0" promptText="User Name" />
            <PasswordField fx:id="password" layoutX="135.0" layoutY="100.0" prefHeight="30.0" prefWidth="530.0" promptText="Password" />
            <Button layoutX="135.0" layoutY="150.0" mnemonicParsing="false" onAction="#login" prefHeight="30.0" prefWidth="140.0" text="Log In" />
            <Button layoutX="285.0" layoutY="150.0" mnemonicParsing="false" onAction="#register" prefHeight="30.0" prefWidth="140.0" text="Register" />

@@ -8,7 +8,7 @@ public class LoginController {
     FBLManager fbl;
 
     @FXML
-    TextField userName;
+    TextField username;
     @FXML
     PasswordField password;
 
@@ -30,7 +30,13 @@ public class LoginController {
         //need to make sure both fields are filled and then validate with database
         //should display warning somewhere if field not filled or login doesn't work
 
-        //userName.getText();
-        //password.getText();
+        String un = username.getText();
+        String pw = password.getText();
+
+        if (!un.equals("") && !pw.equals("")) {
+            DatabaseController dbc = new DatabaseController(); // connect to db
+            dbc.LoginUser(un, pw); // find matching credential in db
+            dbc.closeConnection();
+        }
     }
 }

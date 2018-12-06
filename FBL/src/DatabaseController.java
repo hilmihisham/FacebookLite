@@ -5,8 +5,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import org.bson.BsonDocumentReader;
-import org.bson.BsonReader;
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.and;
@@ -25,24 +23,36 @@ public class DatabaseController {
         db = client.getDatabase("FacebookLite"); // accessing db FacebookLite
     }
 
-    public void RegisterNewUser() {
+    // closing connection to database
+    public void closeConnection() {
+        client.close();
+        System.out.println("Connection to db closed.");
+    }
+
+    // registering new user from "Register" FXML page
+    public void RegisterNewUser(String un, String pw, String fn, String ln, String sq, String sa, int age) {
+
         // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
-        // creating new user document based on the input from UI - hard-coded for testing, TODO use variables
-        Document newUser = new Document("username", "tom")
-                .append("password", "myspace")
-                .append("firstName", "Tom")
-                .append("lastName", "MySpace")
-                .append("age", 15);
+        // creating new user document based on the input from UI
+        Document newUser = new Document("username", un)
+                .append("password", pw)
+                .append("firstName", fn)
+                .append("lastName", ln)
+                .append("age", age)
+                .append("secureQ", sq)
+                .append("secureA", sa);
 
         // insert newUser into registeredUser collection
         collRU.insertOne(newUser);
+        System.out.println("Username " + un + " is registered!");
     }
 
     // can be used for login purposes
     public void LoginUser(String username, String password) {
 
+        // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
         // ----- get document of matching u/n and p/w from registeredData -----
@@ -67,7 +77,7 @@ public class DatabaseController {
 
                 String fn = userDoc.getString("firstName");
                 String ln = userDoc.getString("lastName");
-                int age = Integer.parseInt(userDoc.getString("age"));
+                int age = userDoc.getInteger("age");
 
                 //System.out.println(userDoc.get("lastName")); // getting data from user document using key
                 User user = new User(fn, ln, age);
@@ -81,14 +91,29 @@ public class DatabaseController {
         }
 
     }
-
     // can be use to get friend's profile
+
     public void GetUser(String username) {
 
+        // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
-        // ----- get all documents from registeredUser -----
+        // ----- get document of given username from registeredData -----
 
+        System.out.println("\n\nPrint " + username + "\'s data\n--------------------\n");
+        String colUsername = "username"; // set key and value to look for in document
+        FindIterable<Document> docOne = collRU.find(Filters.eq(colUsername, username)); // find document by filters
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+        try {
+            while (cursor1.hasNext()) {
+                System.out.println(cursor1.next().toString()); // print username's document in String
+            }
+        } finally {
+            cursor1.close();
+        }
+
+        // ----- get all documents from registeredUser (example) -----
+        /*
         System.out.println("Print all users\n---------------\n");
         FindIterable<Document> docAll = collRU.find(); // get all documents
         MongoCursor<Document> cursor = docAll.iterator(); // set up cursor tu iterate each rows of documents
@@ -99,30 +124,16 @@ public class DatabaseController {
         } finally {
             cursor.close();
         }
-
-        // ----- get document of username "tom" from registeredData -----
-        System.out.println("\n\nPrint " + username + "\'s data\n--------------------\n");
-        String colUsername = "username", searchedUser = username; // set key and value to look for in document
-        FindIterable<Document> docOne = collRU.find(Filters.eq(colUsername, searchedUser)); // find document by filters
-        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
-        try {
-            while (cursor1.hasNext()) {
-                System.out.println(cursor1.next().toString()); // print username's document in String
-            }
-        } finally {
-            cursor1.close();
-        }
-
+        */
     }
 
     // ------------------------------------------------------------------ //
-
     // test + debug purposes only
+
     public static void main(String[] args) {
         DatabaseController dbc = new DatabaseController();
         //dbc.RegisterNewUser();
         //dbc.GetUser("tom");
-        dbc.LoginUser("admin", "admin1");
+        //dbc.LoginUser("admin", "admin1");
     }
-
 }
