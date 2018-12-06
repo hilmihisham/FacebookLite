@@ -5,7 +5,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import org.bson.BsonDocumentReader;
+import org.bson.BsonReader;
 import org.bson.Document;
+
+import static com.mongodb.client.model.Filters.and;
 
 /**
  *  All methods to read and edit the database should go here
@@ -36,6 +40,49 @@ public class DatabaseController {
         collRU.insertOne(newUser);
     }
 
+    // can be used for login purposes
+    public void LoginUser(String username, String password) {
+
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+        // ----- get document of matching u/n and p/w from registeredData -----
+        String colUsername = "username", colPassword = "password"; // set key and value to look for in document
+
+        // find document by filters
+        FindIterable<Document> docOne = collRU.find(
+                and(
+                    (Filters.eq(colUsername, username)),
+                    (Filters.eq(colPassword, password))
+                ));
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+
+        try {
+            // cursor1 will only have 1 data if we found a match
+            if (cursor1.hasNext()) {
+
+                Document userDoc = cursor1.next(); // JSON string
+
+                System.out.println("\n\nPrint " + username + "\'s data\n--------------------\n");
+                System.out.println(userDoc.toJson()); // print username's document in JSON
+
+                String fn = userDoc.getString("firstName");
+                String ln = userDoc.getString("lastName");
+                int age = Integer.parseInt(userDoc.getString("age"));
+
+                //System.out.println(userDoc.get("lastName")); // getting data from user document using key
+                User user = new User(fn, ln, age);
+            }
+            else {
+                System.out.println("username and/or password didn\'t match");
+            }
+        }
+        finally {
+            cursor1.close();
+        }
+
+    }
+
+    // can be use to get friend's profile
     public void GetUser(String username) {
 
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
@@ -74,7 +121,8 @@ public class DatabaseController {
     public static void main(String[] args) {
         DatabaseController dbc = new DatabaseController();
         //dbc.RegisterNewUser();
-        dbc.GetUser("tom");
+        //dbc.GetUser("tom");
+        dbc.LoginUser("admin", "admin1");
     }
 
 }
