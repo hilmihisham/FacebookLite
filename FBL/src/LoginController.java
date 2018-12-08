@@ -17,7 +17,7 @@ public class LoginController {
         this.fbl = fbl;
     }
 
-    public void forgotpassword() throws Exception{
+    public void forgotpassword() throws Exception {
         gui.loadForgotPasswordPage();
     }
 
@@ -25,21 +25,28 @@ public class LoginController {
         gui.loadRegisterPage();
     }
 
-    public void login() throws Exception{
+    public void login() throws Exception {
         //need to make sure both fields are filled and then validate with database
         //should display warning somewhere if field not filled or login doesn't work
+
+        boolean isSuccess = false;
 
         String un = username.getText();
         String pw = password.getText();
 
         if (!un.equals("") && !pw.equals("")) {
             DatabaseController dbc = new DatabaseController(); // connect to db
-            dbc.LoginUser(un, pw); // find matching credential in db
+            isSuccess = dbc.loginUser(un, pw); // find matching credential in db
             dbc.closeConnection();
         }
         //userName.getText();
         //password.getText();
 
-        gui.loadHomePage();
+        if (isSuccess)
+            gui.loadHomePage();
+        else {
+            // do it by popup or text label on Login.fxml or something
+            System.out.println("Login unsuccessful");
+        }
     }
 }

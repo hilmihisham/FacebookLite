@@ -9,15 +9,19 @@ mongod --dbpath /path/to/Project-4/data
 
 access database using `mongo` > `use FacebookLite`
 
-## Notes on database
+## Database Overview
 
-Dec 04: 
- - Created `registeredUser` to hold all registered users (name changed from `registerData`)
+### Created `DatabaseController.java` to hold all the codes to read, write, edit, etc to the `FacebookLite` database
+ - just call `DatabaseController.java` from any UI controller and it will open a connection to the database
+ - `DatabaseController.java` will be populated with methods to be use in different situation to read/write/etc to database
+ - each different method will need to specify which Collection (Table) to access to before doing anything that needs to be done
+
+### `registeredUser`: 
+ - Created `registeredUser` to hold all registered users 
  - Collection formatting:
    ```
-   "username" | "password" | "firstName" | "lastName" | "age" (int) 
+   "username" | "password" | "firstName" | "lastName" | "age" (int) | "secureQ" | secureA
    ```
- - Created `DatabaseController.java` to hold all the codes to read, write, edit, etc to the `FacebookLite` database
 
 ## Experimenting with database 
 ```
