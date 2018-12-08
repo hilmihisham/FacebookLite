@@ -104,6 +104,7 @@ public class RegisterController {
             }
 
             // call popup window to confirm registration complete (?)
+            // use registerSuccess = true/false
 
             // get back to login page
             if (registerSuccess) {

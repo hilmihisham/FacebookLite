@@ -7,7 +7,12 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
+import java.util.*;
+
 import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
 
 /**
  *  All methods to read and edit the database should go here
@@ -54,6 +59,13 @@ public class DatabaseController {
             collRU.insertOne(newUser);
             System.out.println("Username " + un + " is registered!");
             success = true;
+
+            // create new collection (table) for new user's post
+            db.createCollection(un + "Post");
+
+            // create followList for new user
+            db.getCollection("followList").insertOne(
+                    new Document("username", un).append("following", new ArrayList<String>()));
         }
 
         return success;
@@ -88,7 +100,7 @@ public class DatabaseController {
         return exist;
     }
 
-    // can be used for login purposes
+    // login to account, TODO decide to use User class or create new
     public void LoginUser(String username, String password) {
 
         // accessing registeredUser table (collection)
@@ -131,25 +143,133 @@ public class DatabaseController {
 
     }
 
-    // can be use to get friend's profile
-    public void GetUser(String username) {
+    // submit a post
+    public void submitPost(String un, String post) {
+
+        // accessing user's post table (collection)
+        MongoCollection<Document> userPostsColl = db.getCollection(un + "Posts");
+
+        // get current date
+        Date now = new Date();
+
+        // get total posts for ID-ing new one
+        long newPostCount = userPostsColl.countDocuments() + 1;
+        String newPostID = un + newPostCount;
+        //System.out.println("newPostID = " + newPostID);
+
+        // creating new user document based on the input from UI
+        Document newPost = new Document("post", post)
+                .append("date", now)
+                .append("postID", newPostID);
+
+        // insert newUser into registeredUser collection
+        userPostsColl.insertOne(newPost);
+        System.out.println("Post #" + newPostCount + " from " + un + " is submitted!");
+        System.out.println(newPost.toJson());
+    }
+
+    // get post collection of user
+    public MongoCollection<Document> getPostsFrom(String un) {
+        // accessing user's post table (collection)
+        MongoCollection<Document> userPostsColl = db.getCollection(un + "Posts");
+
+        return userPostsColl;
+    }
+
+    // get posts from everyone this user follow
+    public void getFollowingPosts(String un) {
+        // get array of username that this user follow
+        ArrayList<String> following = getFollowList(un);
+
+        // this is where we keep all the posts
+        ArrayList<Document> allPosts = new ArrayList<>();
+
+        // get posts from everyone that this user follow
+        for (String followingWho : following) {
+            MongoCollection<Document> userPosts = getPostsFrom(followingWho);
+
+            FindIterable<Document> postDocs = userPosts.find(); // get all documents from this user
+            MongoCursor<Document> cursor = postDocs.iterator(); // set up cursor to iterate rows of documents
+            try {
+                while (cursor.hasNext()) {
+                    //System.out.println(cursor.next().toJson()); // print username's document in String
+                    allPosts.add(cursor.next()); // add every post Documents into allPosts
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        // TODO sort allPosts by "date" before showing it all
+
+        for (Document docs : allPosts) {
+            System.out.println(docs.toJson()); // print out allPosts
+        }
+    }
+
+    // get the list of who this user follow
+    public ArrayList<String> getFollowList(String un) {
+        // accessing follow list table (collection)
+        MongoCollection<Document> followColl = db.getCollection("followList");
+
+        // find user's document
+        Document followDoc = (Document) followColl.find(Filters.eq("username", un)).first();
+        //System.out.println(followDoc.toJson());
+
+        // get username of everyone that this user is following
+        //if (we follow no one) do something (?)
+        ArrayList<String> following = (ArrayList<String>) followDoc.get("following");
+
+        /*
+        for (String followingWho: following) {
+            System.out.println("\nFollowing: " + followingWho.toString());
+            GetUser(followingWho.toString());
+        }
+        */
+
+        return following;
+    }
+
+    // following other user
+    public void followingOtherUser(String me, String other) {
+        // accessing follow list table (collection)
+        MongoCollection<Document> followColl = db.getCollection("followList");
+
+        // get the ArrayList of who "me" is following
+        ArrayList<String> following = getFollowList(me);
+                //(ArrayList<String>) followColl.find(eq("username", me)).first().get("following");
+
+        // adding other user to my following list
+        following.add(other);
+
+        // updating in database
+        followColl.updateOne(
+                eq("username", me),
+                combine(set("following", following))
+        );
+
+        System.out.println(me + " is now following " + other);
+    }
+
+    // can be use to get friend's profile, TODO limit of what data we can get from this
+    public void GetUser(String un) {
 
         // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
         // ----- get document of given username from registeredData -----
 
-        System.out.println("\n\nPrint " + username + "\'s data\n--------------------\n");
-        String colUsername = "username"; // set key and value to look for in document
-        FindIterable<Document> docOne = collRU.find(Filters.eq(colUsername, username)); // find document by filters
+        System.out.println("\nPrint " + un + "\'s data\n--------------------\n");
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un)); // find document by filters
         MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
         try {
             while (cursor1.hasNext()) {
-                System.out.println(cursor1.next().toString()); // print username's document in String
+                System.out.println(cursor1.next().toJson()); // print username's document in String
             }
         } finally {
             cursor1.close();
         }
+    }
 
         // ----- get all documents from registeredUser (example) -----
         /*
@@ -164,7 +284,7 @@ public class DatabaseController {
             cursor.close();
         }
         */
-    }
+
 
     // ------------------------------------------------------------------ //
     // test + debug purposes only
@@ -172,7 +292,12 @@ public class DatabaseController {
     public static void main(String[] args) {
         DatabaseController dbc = new DatabaseController();
         //dbc.RegisterNewUser();
+        //dbc.RegisterNewUser("test", "test", "Firstname", "Lastname", "test", "error", 65);
         //dbc.GetUser("tom");
         //dbc.LoginUser("admin", "admin1");
+        //dbc.submitPost("tom", "it\'s 2126hrs now");
+        //System.out.println(dbc.getFollowList("admin"));
+        //dbc.getFollowingPosts("hilmi");
+        //dbc.followingOtherUser("test", "hilmi");
     }
 }
