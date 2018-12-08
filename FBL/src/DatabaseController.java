@@ -59,6 +59,7 @@ public class DatabaseController {
         return success;
     }
 
+    // checking if someone has already took the username in parameter
     public boolean isUsernameExist(String un) {
 
         boolean exist = false;
@@ -96,7 +97,7 @@ public class DatabaseController {
         // ----- get document of matching u/n and p/w from registeredData -----
         String colUsername = "username", colPassword = "password"; // set key and value to look for in document
 
-        // find document by filters
+        // find document by filters (u/n and p/w)
         FindIterable<Document> docOne = collRU.find(
                 and(
                     (Filters.eq(colUsername, username)),
