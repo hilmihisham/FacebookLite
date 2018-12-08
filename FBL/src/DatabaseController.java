@@ -43,17 +43,21 @@ public class DatabaseController {
             success = false;
         }
         else {
+            // encrypting input password
+            SHAEncryption sha = new SHAEncryption();
+            String shaPW = sha.getSHA(pw);
+
             // accessing registeredUser table (collection)
             MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
             // creating new user document based on the input from UI
             Document newUser = new Document("username", un)
-                    .append("password", pw)
+                    .append("password", shaPW)
                     .append("firstName", fn)
                     .append("lastName", ln)
                     .append("age", age)
                     .append("secureQ", sq)
-                    .append("secureA", sa);
+                    .append("secureA", sa.toLowerCase());
 
             // insert newUser into registeredUser collection
             collRU.insertOne(newUser);
@@ -107,13 +111,18 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
         // ----- get document of matching u/n and p/w from registeredData -----
-        String colUsername = "username", colPassword = "password"; // set key and value to look for in document
+
+        //String colUsername = "username", colPassword = "password"; // set key and value to look for in document
+
+        // get SHA value of given password
+        SHAEncryption sha = new SHAEncryption();
+        String shaPW = sha.getSHA(password);
 
         // find document by filters (u/n and p/w)
         FindIterable<Document> docOne = collRU.find(
                 and(
-                    (Filters.eq(colUsername, username)),
-                    (Filters.eq(colPassword, password))
+                    (Filters.eq("username", username)),
+                    (Filters.eq("password", shaPW))
                 ));
         MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
 
@@ -140,7 +149,26 @@ public class DatabaseController {
         finally {
             cursor1.close();
         }
+    }
 
+    // create new post (Option B)
+    public void createNewPost(String un, String post) {
+
+        // accessing posts table
+        MongoCollection<Document> postColl = db.getCollection("postsRecord");
+
+        // get current date
+        Date now = new Date();
+
+        // creating new user document based on the input from UI
+        Document newPost = new Document("post", post)
+                .append("date", now)
+                .append("username", un);
+
+        // insert newPost into registeredUser collection
+        postColl.insertOne(newPost);
+        System.out.println("New post from " + un + " is submitted!");
+        System.out.println(newPost.toJson());
     }
 
     // submit a post
@@ -157,12 +185,12 @@ public class DatabaseController {
         String newPostID = un + newPostCount;
         //System.out.println("newPostID = " + newPostID);
 
-        // creating new user document based on the input from UI
+        // creating new post document based on the input from UI
         Document newPost = new Document("post", post)
                 .append("date", now)
                 .append("postID", newPostID);
 
-        // insert newUser into registeredUser collection
+        // insert newPost into registeredUser collection
         userPostsColl.insertOne(newPost);
         System.out.println("Post #" + newPostCount + " from " + un + " is submitted!");
         System.out.println(newPost.toJson());
@@ -275,7 +303,7 @@ public class DatabaseController {
         /*
         System.out.println("Print all users\n---------------\n");
         FindIterable<Document> docAll = collRU.find(); // get all documents
-        MongoCursor<Document> cursor = docAll.iterator(); // set up cursor tu iterate each rows of documents
+        MongoCursor<Document> cursor = docAll.iterator(); // set up cursor to iterate each rows of documents
         try {
             while (cursor.hasNext()) {
                 System.out.println(cursor.next().toJson()); // print a row in JSON
@@ -292,12 +320,14 @@ public class DatabaseController {
     public static void main(String[] args) {
         DatabaseController dbc = new DatabaseController();
         //dbc.RegisterNewUser();
-        //dbc.RegisterNewUser("test", "test", "Firstname", "Lastname", "test", "error", 65);
+        //dbc.RegisterNewUser("admin", "admin1", "Admin", "FacebookLite", "Who am I?", "sudo poweruser", 585);
         //dbc.GetUser("tom");
         //dbc.LoginUser("admin", "admin1");
         //dbc.submitPost("tom", "it\'s 2126hrs now");
         //System.out.println(dbc.getFollowList("admin"));
         //dbc.getFollowingPosts("hilmi");
         //dbc.followingOtherUser("test", "hilmi");
+
+        //dbc.createNewPost("tom", "Boo, MySpace is waaaaaayyyyyy better! @admin");
     }
 }
