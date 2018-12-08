@@ -106,7 +106,9 @@ public class DatabaseController {
     }
 
     // login to account, TODO decide to use User class or create new, or just use db data to set up text in GUI
-    public void loginUser(String username, String password) {
+    public boolean loginUser(String username, String password) {
+
+        boolean isSuccess = false;
 
         // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
@@ -129,6 +131,8 @@ public class DatabaseController {
             // cursor1 will only have 1 data if we found a match
             if (cursor1.hasNext()) {
 
+                isSuccess = true; // successfully log in
+
                 Document userDoc = cursor1.next(); // JSON string
 
                 System.out.println("\n\nPrint " + username + "\'s data\n--------------------\n");
@@ -148,6 +152,8 @@ public class DatabaseController {
         finally {
             cursor1.close();
         }
+
+        return isSuccess;
     }
 
     // create new post
