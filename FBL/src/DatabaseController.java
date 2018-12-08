@@ -30,23 +30,61 @@ public class DatabaseController {
     }
 
     // registering new user from "Register" FXML page
-    public void RegisterNewUser(String un, String pw, String fn, String ln, String sq, String sa, int age) {
+    public boolean RegisterNewUser(String un, String pw, String fn, String ln, String sq, String sa, int age) {
+
+        boolean success;
+
+        if (isUsernameExist(un)) {
+            success = false;
+        }
+        else {
+            // accessing registeredUser table (collection)
+            MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+            // creating new user document based on the input from UI
+            Document newUser = new Document("username", un)
+                    .append("password", pw)
+                    .append("firstName", fn)
+                    .append("lastName", ln)
+                    .append("age", age)
+                    .append("secureQ", sq)
+                    .append("secureA", sa);
+
+            // insert newUser into registeredUser collection
+            collRU.insertOne(newUser);
+            System.out.println("Username " + un + " is registered!");
+            success = true;
+        }
+
+        return success;
+    }
+
+    public boolean isUsernameExist(String un) {
+
+        boolean exist = false;
 
         // accessing registeredUser table (collection)
-        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+        MongoCollection<Document> collection = db.getCollection("registeredUser");
 
-        // creating new user document based on the input from UI
-        Document newUser = new Document("username", un)
-                .append("password", pw)
-                .append("firstName", fn)
-                .append("lastName", ln)
-                .append("age", age)
-                .append("secureQ", sq)
-                .append("secureA", sa);
+        // ----- get document of given username from registeredData -----
+        System.out.println("\nVerifying if username already exists or not\n--------------------\n");
+        String colUsername = "username"; // set key and value to look for in document
+        FindIterable<Document> docOne = collection.find(Filters.eq(colUsername, un)); // find document by filters
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+        try {
+            // cursor1 will only have 1 data if we found a match
+            if (cursor1.hasNext()) {
+                System.out.println("Username already exists");
+                exist = true;
+            }
+            else {
+                System.out.println("Username is available to register");
+            }
+        } finally {
+            cursor1.close();
+        }
 
-        // insert newUser into registeredUser collection
-        collRU.insertOne(newUser);
-        System.out.println("Username " + un + " is registered!");
+        return exist;
     }
 
     // can be used for login purposes
@@ -91,8 +129,8 @@ public class DatabaseController {
         }
 
     }
-    // can be use to get friend's profile
 
+    // can be use to get friend's profile
     public void GetUser(String username) {
 
         // accessing registeredUser table (collection)

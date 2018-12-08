@@ -1,10 +1,7 @@
 import com.mongodb.MongoException;
-import com.mongodb.MongoSocketOpenException;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
-import java.net.ConnectException;
 
 public class RegisterController {
 
@@ -27,7 +24,7 @@ public class RegisterController {
     @FXML
     TextField secureAnswer;
 
-    public void initialize(GUIManager gui, FBLManager fbl){
+    public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
         this.fbl = fbl;
 
@@ -37,6 +34,10 @@ public class RegisterController {
                 ageInputDone();
             }
         }));
+    }
+
+    private void connectToDB() throws MongoException {
+        dbc = new DatabaseController();
     }
 
     public void back() throws Exception {
@@ -61,9 +62,11 @@ public class RegisterController {
         //need to check that all fields aren't empty and are properly formatted
         //if not, there needs to be a warning message on the UI
 
+        boolean registerSuccess = false;
         boolean inputComplete = true;
         String[] input = new String[6];
 
+        // populate input[] with user inputs
         input[0] = username.getText();
         input[1] = password.getText();
         input[2] = firstName.getText();
@@ -74,42 +77,43 @@ public class RegisterController {
         // checking if all TextField is filled
         for (String data: input) {
             if (data.equals("")) {
-                System.out.println("data = " + data);
+                //System.out.println("data = " + data);
                 inputComplete = false;
             }
         }
 
+        // all TextField filled (including age field)
         if (inputComplete && (!age.getText().equals(""))) {
             int inputAge = Integer.parseInt(age.getText());
             System.out.println("all green to register!");
 
             // opening connection to database
             try {
-                registerToDB();
+                connectToDB();
             } catch (MongoException me) {
                 System.out.println("Cannot connect to database");
-                dbc.closeConnection();
+                //dbc.closeConnection();
                 return;
             }
 
             // registering user to database
             if (dbc != null) {
-                dbc.RegisterNewUser(input[0], input[1], input[2], input[3], input[4], input[5], inputAge);
+                registerSuccess = dbc.RegisterNewUser
+                        (input[0], input[1], input[2], input[3], input[4], input[5], inputAge);
                 dbc.closeConnection();
             }
 
             // call popup window to confirm registration complete (?)
 
             // get back to login page
-            try {
-                back();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (registerSuccess) {
+                try {
+                    back();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void registerToDB() throws MongoException {
-        dbc = new DatabaseController();
-    }
 }
