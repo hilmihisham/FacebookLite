@@ -1,3 +1,6 @@
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+
 public class ProfileUIController {
     GUIManager gui;
     FBLManager fbl;
@@ -6,4 +9,9 @@ public class ProfileUIController {
         this.gui = gui;
         this.fbl = fbl;
     }
+
+    @FXML
+    TextField ProfileUIUserName;
+
+
 }
