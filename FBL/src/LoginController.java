@@ -17,7 +17,7 @@ public class LoginController {
         this.fbl = fbl;
     }
 
-    public void forgotpassword() throws Exception{
+    public void forgotpassword() throws Exception {
         gui.loadForgotPasswordPage();
     }
 
@@ -25,7 +25,7 @@ public class LoginController {
         gui.loadRegisterPage();
     }
 
-    public void login() throws Exception{
+    public void login() throws Exception {
         //need to make sure both fields are filled and then validate with database
         //should display warning somewhere if field not filled or login doesn't work
 
