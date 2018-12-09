@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
     <top>
         <AnchorPane prefHeight="240.0" prefWidth="800.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
             <children>
@@ -36,6 +36,7 @@
            <Button layoutX="135.0" layoutY="150.0" mnemonicParsing="false" onAction="#login" prefHeight="30.0" prefWidth="140.0" text="Log In" />
            <Button layoutX="285.0" layoutY="150.0" mnemonicParsing="false" onAction="#register" prefHeight="30.0" prefWidth="140.0" text="Register" />
            <Button layoutX="465.0" layoutY="150.0" mnemonicParsing="false" onAction="#forgotpassword" prefHeight="30.0" prefWidth="200.0" text="Forgot Password?" />
+            <Label fx:id="errors" layoutX="139.0" layoutY="195.0" prefHeight="21.0" prefWidth="525.0" textFill="RED" />
        </children>
         <padding>
            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

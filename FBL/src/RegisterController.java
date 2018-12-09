@@ -1,5 +1,8 @@
-import com.mongodb.MongoException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -7,7 +10,6 @@ public class RegisterController {
 
     GUIManager gui;
     FBLManager fbl;
-    DatabaseController dbc;
 
     @FXML
     TextField firstName;
@@ -23,97 +25,105 @@ public class RegisterController {
     TextField secureQuestion;
     @FXML
     TextField secureAnswer;
+    @FXML
+    Label errors;
 
     public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
         this.fbl = fbl;
+        addListeners();
+    }
 
-        // add focus listener to age TextField
-        age.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (!newValue) { // if age TextField focus lost
-                ageInputDone();
+    private void addListeners(){
+        age.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!newValue.matches("[0-9]*"))
+                    age.setText(oldValue);
             }
-        }));
+        });
+
+//        age.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+//            if (!newValue) { // if age TextField focus lost
+//                ageInputDone();
+//            }
+//        }));
     }
 
-    private void connectToDB() throws MongoException {
-        dbc = new DatabaseController();
-    }
+//    public void ageInputDone() {
+//        int ageInput;
+//        try {
+//            ageInput = Integer.parseInt(age.getText());
+//        } catch (NumberFormatException e) {
+//            // show dialog of error input
+//            age.getStyleClass().add("errorInput");
+//            age.clear();
+//            age.setPromptText("Use numbers only");
+//        }
+//    }
 
     public void back() throws Exception {
         gui.loadLoginPage();
     }
 
-    public void ageInputDone() {
+    public void register() throws Exception{
+        //Try to register new user with currently entered fields
+        String fName = firstName.getText();
+        String lName = lastName.getText();
+        String user = username.getText();
+        String pass = password.getText();
+        String sQuestion = secureQuestion.getText();
+        String sAnswer = secureAnswer.getText();
+        int inputAge;
+        try{ inputAge = Integer.parseInt(age.getText()); }
+        catch(Exception e){ inputAge=0; }
 
-        int ageInput;
-
-        try {
-            ageInput = Integer.parseInt(age.getText());
-        } catch (NumberFormatException e) {
-            // show dialog of error input
-            age.getStyleClass().add("errorInput");
-            age.clear();
-            age.setPromptText("Use numbers only");
+        if(fName.equals("")) {
+            errors.setText("Please enter your first name.");
+            return;
         }
-    }
-
-    public void register() {
-        //need to check that all fields aren't empty and are properly formatted
-        //if not, there needs to be a warning message on the UI
-
-        boolean registerSuccess = false;
-        boolean inputComplete = true;
-        String[] input = new String[6];
-
-        // populate input[] with user inputs
-        input[0] = username.getText();
-        input[1] = password.getText();
-        input[2] = firstName.getText();
-        input[3] = lastName.getText();
-        input[4] = secureQuestion.getText();
-        input[5] = secureAnswer.getText().toLowerCase();
-
-        // checking if all TextField is filled
-        for (String data: input) {
-            if (data.equals("")) {
-                //System.out.println("data = " + data);
-                inputComplete = false;
-            }
+        if(lName.equals("")) {
+            errors.setText("Please enter your last name.");
+            return;
+        }
+        if(user.equals("")) {
+            errors.setText("Please enter a username.");
+            return;
+        }
+        if(pass.equals("")) {
+            errors.setText("Please enter a password.");
+            return;
+        }
+        if(inputAge<18 || inputAge>999) {
+            errors.setText("Invalid Age.");
+            return;
+        }
+        if(sQuestion.equals("")){
+            errors.setText("Please enter a security question.");
+            return;
+        }
+        if(sAnswer.equals("")){
+            errors.setText("Please enter an answer to your security question.");
+            return;
         }
 
-        // all TextField filled (including age field)
-        if (inputComplete && (!age.getText().equals(""))) {
-            int inputAge = Integer.parseInt(age.getText());
-            System.out.println("all green to register!");
+        boolean result = fbl.register(username.getText(),password.getText(),firstName.getText(),lastName.getText(),
+                secureQuestion.getText(),secureAnswer.getText().toLowerCase(),inputAge);
 
-            // opening connection to database
-            try {
-                connectToDB();
-            } catch (MongoException me) {
-                System.out.println("Cannot connect to database");
-                //dbc.closeConnection();
-                return;
-            }
-
-            // registering user to database
-            if (dbc != null) {
-                registerSuccess = dbc.registerNewUser
-                        (input[0], input[1], input[2], input[3], input[4], input[5], inputAge);
-                dbc.closeConnection();
-            }
-
-            // call popup window to confirm registration complete (?)
-            // use registerSuccess = true/false
-
-            // get back to login page
-            if (registerSuccess) {
-                try {
-                    back();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        if(result){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Registration");
+            alert.setHeaderText(null);
+            alert.setContentText("Hi " + fName + "! Successfully registered a new account with the username: " + user);
+            alert.showAndWait();
+            gui.loadLoginPage();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Username");
+            alert.setHeaderText("Username already exists!");
+            alert.setContentText("Please try a different username.");
+            alert.showAndWait();
         }
     }
 

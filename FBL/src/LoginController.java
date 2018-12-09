@@ -1,4 +1,5 @@
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -11,6 +12,8 @@ public class LoginController {
     TextField username;
     @FXML
     PasswordField password;
+    @FXML
+    Label errors;
 
     public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
@@ -18,35 +21,36 @@ public class LoginController {
     }
 
     public void forgotpassword() throws Exception {
+        //Go to the forgot password page
         gui.loadForgotPasswordPage();
     }
 
     public void register() throws Exception {
+        //Go to the register page
         gui.loadRegisterPage();
     }
 
     public void login() throws Exception {
-        //need to make sure both fields are filled and then validate with database
-        //should display warning somewhere if field not filled or login doesn't work
+        //Attempt to login with entered credentials
+        String user = username.getText();
+        String pass = password.getText();
 
-        boolean isSuccess = false;
-
-        String un = username.getText();
-        String pw = password.getText();
-
-        if (!un.equals("") && !pw.equals("")) {
-            DatabaseController dbc = new DatabaseController(); // connect to db
-            isSuccess = dbc.loginUser(un, pw); // find matching credential in db
-            dbc.closeConnection();
+        if(user.equals("")) {
+            errors.setText("Please enter a username.");
+            return;
         }
-        //userName.getText();
-        //password.getText();
+        if(pass.equals("")) {
+            errors.setText("Please enter a password.");
+            return;
+        }
 
-        if (isSuccess)
+        if (fbl.login(user,pass)) {
+            //login success
             gui.loadHomePage();
+        }
         else {
-            // do it by popup or text label on Login.fxml or something
-            System.out.println("Login unsuccessful");
+            //failed to login, display error on screen
+            errors.setText("Invalid username or password.");
         }
     }
 }
