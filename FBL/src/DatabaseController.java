@@ -1,3 +1,5 @@
+//Class for managing all database operations
+
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -143,7 +145,6 @@ public class DatabaseController {
                 int age = userDoc.getInteger("age");
 
                 //System.out.println(userDoc.get("lastName")); // getting data from user document using key
-                User user = new User(fn, ln, age);
             }
             else {
                 System.out.println("username and/or password didn\'t match");
@@ -178,12 +179,14 @@ public class DatabaseController {
 
     // get sorted post from this one user
     // can be used when we visiting other people's profile
-    public void getUserPost(String un) {
+    public void getUserPost(String un, ArrayList<Document> userPost) {
 
         // accessing posts table
         MongoCollection<Document> postColl = db.getCollection("postsRecord");
 
-        ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
+        //TODO Hilmi, i made this change below (and added new argument above)
+        //ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
+        userPost.clear();
 
         FindIterable<Document> postDocs = postColl
                 .find(Filters.eq("username", un)) // get all documents from this user

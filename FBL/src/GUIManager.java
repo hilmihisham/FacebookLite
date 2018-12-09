@@ -1,3 +1,5 @@
+//Class for managing and changing GUI scenes
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
