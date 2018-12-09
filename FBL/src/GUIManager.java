@@ -60,4 +60,12 @@ public class GUIManager {
         profile.initialize(this,fbl);
         scene.setRoot(root);
     }
+
+    public void loadResetPasswordPage() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ForgotPasswordReset.fxml"));
+        Parent root = loader.load();
+        ForgotPasswordController forgot = loader.getController();
+        forgot.initialize(this, fbl);
+        scene.setRoot(root);
+    }
 }
