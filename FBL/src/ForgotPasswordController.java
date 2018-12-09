@@ -1,45 +1,87 @@
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 /**
- * will be used for both ForgotPassword.fxml and ForgotPasswordReset.fxml
+ * will be used for ForgotPassword.fxml
+ * this scene will have two "page" (query username, and change password)
+ * try not to be confused :P
  */
 public class ForgotPasswordController {
 
     GUIManager gui;
     FBLManager fbl;
+    UserData userData;
+    String username;
 
+    // pass variables as object if you wanna update data from given parameter, i.e. passed by reference
+    public class UserData {
+        public String question, answer;
+    }
+
+    // first page
+    @FXML
+    Label usernameLabel;
     @FXML
     TextField usernameInput;
     @FXML
     Label notExistNotice;
     @FXML
-    Label questionLabel;
+    Button retrieveButton;
+
+    // second page
+    @FXML
+    Label questionLabelLeft;
+    @FXML
+    Label answerLabel;
+    @FXML
+    Label newPWLabel;
+    @FXML
+    Label questionLabelData;
     @FXML
     TextField answerField;
     @FXML
-    Label matchingErrorNotice;
+    Label answerErrorNotice;
     @FXML
     PasswordField newPasswordField;
+    @FXML
+    Label pwErrorNotice;
+    @FXML
+    Button resetPWButton;
 
     public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
         this.fbl = fbl;
 
-        // hide error notice at launch
+        userData = new UserData();
+
+        // load first "page" when we first into this scene
+        setupFirstView(true);
+    }
+
+    // true if we're in first "page" (only username field visible)
+    // false if we're in 2nd "page" (question and new password)
+    private void setupFirstView(boolean isFirst) {
+        usernameLabel.setVisible(isFirst);
+        usernameInput.setVisible(isFirst);
         if (notExistNotice != null)
-            notExistNotice.setVisible(false);
+            notExistNotice.setVisible(false); // error always hidden first
+        retrieveButton.setVisible(isFirst);
 
-        // hide error notice at first
-        if (matchingErrorNotice != null)
-            matchingErrorNotice.setVisible(false);
-
-        // get question string from db and setText to questionLabel
-        if (questionLabel != null)
-            questionLabel.setText("test question");
+        questionLabelLeft.setVisible(!isFirst);
+        answerLabel.setVisible(!isFirst);
+        newPWLabel.setVisible(!isFirst);
+        questionLabelData.setVisible(!isFirst);
+        answerField.setVisible(!isFirst);
+        if (answerErrorNotice != null)
+            answerErrorNotice.setVisible(false); // error always hidden first
+        newPasswordField.setVisible(!isFirst);
+        if (pwErrorNotice != null)
+            pwErrorNotice.setVisible(false); // error always hidden first
+        resetPWButton.setVisible(!isFirst);
     }
 
     public void back() throws Exception {
@@ -48,48 +90,77 @@ public class ForgotPasswordController {
 
     // clicking retrieve button
     public void getUsernameFromDB() throws Exception {
-        String username = usernameInput.getText();
+        username = usernameInput.getText();
+        boolean userExist;
 
         if (!username.equals("")) {
             System.out.println("Input username = " + username);
+
             // find username in db
+            userExist = fbl.getSecureQuestion(username, userData);
 
             //if username exists, load reset page
-            gui.loadResetPasswordPage();
+            if (userExist) {
+                questionLabelData.setText(userData.question);
+                setupFirstView(false);
+                System.out.println("Q+A = \'" + userData.question + "\' & \'" + userData.answer + "\'");
+            }
             // else, show error notice
-            //notExistNotice.setVisible(true);
+            else
+                notExistNotice.setVisible(true);
         }
     }
 
     // clicking reset password button
     public void resetPassword() throws Exception {
 
-        String answer = answerField.getText();
+        String answer = answerField.getText().toLowerCase(); // we saved all answers in db in lower case
         String newPW = newPasswordField.getText();
+
+        // if answer empty
+        if (answer.equals("")) {
+            answerErrorNotice.setText("Answer cannot be blank.");
+            answerErrorNotice.setVisible(true);
+        }
+        //if answer not match
+        else if (!answer.equals(userData.answer)) {
+            answerErrorNotice.setText("Answer not matched. Password is not reset.");
+            answerErrorNotice.setVisible(true);
+        }
+        else {
+            answerErrorNotice.setVisible(false);
+        }
+
+        // if new password empty
+        if (newPW.equals("")) {
+            pwErrorNotice.setText("Password cannot be blank.");
+            pwErrorNotice.setVisible(true);
+        } else {
+            pwErrorNotice.setVisible(false);
+        }
 
         // if both TextField not empty
         if (!answer.equals("") && !newPW.equals("")) {
-            // check answer with database
-            //boolean isCorrect = false;
 
             //if answer not match
-            //if (!isCorrect) {
-            //matchingErrorNotice.setVisible(true);
-            //return;
-            //}
-            //else {
+            if (!answer.equals(userData.answer)) {
+                answerErrorNotice.setText("Answer not matched. Password is not reset.");
+                answerErrorNotice.setVisible(true);
+            }
+            else {
                 // changed password in database
+                fbl.changePassword(username, newPW, userData.question, answer);
 
                 // have popup window of password changed confirmation
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("FacebookLite");
-                alert.setHeaderText("Resetting password");
+                alert.setHeaderText("Reset password");
                 alert.setContentText("Reset complete. Your password have been successfully changed.");
                 alert.showAndWait();
 
                 // call back() to jump to login page
                 back();
-            //}
+            }
 
         }
 

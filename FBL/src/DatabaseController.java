@@ -8,7 +8,9 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.*;
 
@@ -307,6 +309,54 @@ public class DatabaseController {
         } finally {
             cursor1.close();
         }
+    }
+
+    public boolean getDataToResetPassword(String un, ForgotPasswordController.UserData ud) {
+
+        boolean userExist = false;
+
+        // accessing registeredUser table (collection)
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un)); // find document by filters
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+        try {
+            if (cursor1.hasNext()) { // if we found user
+                userExist = true;
+
+                // extract user data
+                Document userData = cursor1.next();
+                ud.question = userData.getString("secureQ");
+                ud.answer = userData.getString("secureA");
+                //System.out.println(cursor1.next().toJson()); // print username's document in String
+            }
+        } finally {
+            cursor1.close();
+        }
+
+        return userExist;
+    }
+
+    public void changingPassword(String un, String pw, String secureQ, String secureA) {
+        // accessing registeredUser table (collection)
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+        // get SHA value of given password
+        SHAEncryption sha = new SHAEncryption();
+        String shaPW = sha.getSHA(pw);
+
+        // updating user database
+        collRU.findOneAndUpdate(
+                and(
+                        eq("username", un),
+                        eq("secureQ", secureQ),
+                        eq("secureA", secureA)
+                ),
+                Updates.set("password", shaPW)
+        );
+
+        // test (print out user after update)
+        //getUser(un);
     }
 
 
