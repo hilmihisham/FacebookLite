@@ -68,10 +68,7 @@ public class DatabaseController {
             collRU.insertOne(newUser);
             System.out.println("Username " + un + " is registered!");
             success = true;
-
-            // create new collection (table) for new user's post
-            db.createCollection(un + "Post");
-
+            
             // create followList for new user
             db.getCollection("followList").insertOne(
                     new Document("username", un).append("following", new ArrayList<String>()));
