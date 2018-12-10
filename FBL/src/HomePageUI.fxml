@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomePageUIController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomePageUIController">
     <top>
         <AnchorPane prefHeight="70.0" prefWidth="800.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
             <children>
@@ -17,7 +17,7 @@
                         <Font name="System Bold" size="22.0" />
                     </font>
                 </Label>
-                <Button fx:id="SettingsButton" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="47.0" text="..." textAlignment="CENTER">
+                <Button fx:id="SettingsButton" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#settings" prefHeight="21.0" prefWidth="47.0" text="..." textAlignment="CENTER">
                     <font>
                         <Font size="21.0" />
                     </font>

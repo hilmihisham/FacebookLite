@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SettingsUIController">
+<BorderPane prefHeight="600.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SettingsUIController">
     <bottom>
         <AnchorPane prefHeight="64.0" prefWidth="386.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="300.0" layoutY="13.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="72.0" text="Save">
+            <Button layoutX="300.0" layoutY="13.0" mnemonicParsing="false" onAction="#save" prefHeight="37.0" prefWidth="72.0" text="Save">
                <font>
                   <Font size="19.0" />
                </font>
@@ -29,7 +29,7 @@
                   <Font name="System Bold" size="22.0" />
                </font>
             </Label>
-            <Button layoutX="14.0" layoutY="11.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" text="X">
+            <Button layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#exit" prefHeight="43.0" prefWidth="34.0" text="X">
                <font>
                   <Font size="26.0" />
                </font>
