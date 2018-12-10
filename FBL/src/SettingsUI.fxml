@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SettingsUIController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SettingsUIController">
     <bottom>
         <AnchorPane prefHeight="64.0" prefWidth="386.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="300.0" layoutY="13.0" mnemonicParsing="false" onAction="#save" prefHeight="37.0" prefWidth="72.0" text="Save">
+            <Button layoutX="352.0" layoutY="11.0" mnemonicParsing="false" onAction="#save" prefHeight="42.0" prefWidth="96.0" text="Save">
                <font>
                   <Font size="19.0" />
                </font>
@@ -38,46 +38,62 @@
       </AnchorPane>
    </top>
    <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="466.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="14.0" layoutY="26.0" prefHeight="33.0" prefWidth="92.0" text="Hide:" textFill="#6baad7">
+            <Label layoutX="14.0" layoutY="26.0" prefHeight="54.0" prefWidth="150.0" text="Privacy:" textFill="#6baad7">
                <font>
                   <Font size="37.0" />
                </font>
             </Label>
-            <Label layoutX="14.0" layoutY="283.0" prefHeight="46.0" prefWidth="143.0" text="Update:" textFill="#6baad7">
+            <Label layoutX="16.0" layoutY="206.0" prefHeight="46.0" prefWidth="143.0" text="Update:" textFill="#6baad7">
                <font>
                   <Font size="37.0" />
                </font>
             </Label>
             <Separator layoutX="29.0" layoutY="110.0" prefHeight="6.0" prefWidth="329.0" />
-            <Separator layoutX="29.0" layoutY="185.0" prefHeight="6.0" prefWidth="329.0" />
-            <Separator layoutX="29.0" layoutY="260.0" prefHeight="6.0" prefWidth="329.0" />
-            <Label layoutX="27.0" layoutY="72.0" text="Friends">
+            <Separator layoutX="400.0" layoutY="109.0" prefHeight="6.0" prefWidth="329.0" />
+            <Separator layoutX="29.0" layoutY="177.0" prefHeight="6.0" prefWidth="329.0" />
+            <Label layoutX="27.0" layoutY="72.0" text="Hide Friends">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <Label layoutX="27.0" layoutY="147.0" text="Age">
+            <Label layoutX="400.0" layoutY="69.0" text="Hide Age">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <Label layoutX="27.0" layoutY="222.0" text="Posts">
+            <Label layoutX="29.0" layoutY="135.0" text="Hide Posts">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <Separator layoutX="29.0" layoutY="400.0" prefHeight="6.0" prefWidth="329.0" />
-            <Label layoutX="27.0" layoutY="362.0" text="Age:">
+            <Separator layoutX="27.0" layoutY="302.0" prefHeight="6.0" prefWidth="329.0" />
+            <Label layoutX="27.0" layoutY="260.0" text="Age:">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <TextField fx:id="UpdateAgeField" layoutX="191.0" layoutY="367.0" promptText="Enter Age" />
+            <TextField fx:id="UpdateAgeField" layoutX="165.0" layoutY="267.0" promptText="Enter New Age" />
             <CheckBox fx:id="HideFriendsCBox" layoutX="340.0" layoutY="91.0" mnemonicParsing="false" />
-            <CheckBox fx:id="HideAgeCBox" layoutX="340.0" layoutY="166.0" mnemonicParsing="false" />
-            <CheckBox fx:id="HidePostsCBox" layoutX="340.0" layoutY="241.0" mnemonicParsing="false" />
+            <CheckBox fx:id="HideAgeCBox" layoutX="708.0" layoutY="91.0" mnemonicParsing="false" />
+            <CheckBox fx:id="HidePostsCBox" layoutX="340.0" layoutY="158.0" mnemonicParsing="false" />
+            <Separator prefHeight="6.0" prefWidth="329.0" />
+            <Separator layoutX="400.0" layoutY="177.0" prefHeight="6.0" prefWidth="329.0" />
+            <Label layoutX="400.0" layoutY="135.0" text="Hide Status">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="HideStatusCBox" layoutX="708.0" layoutY="158.0" mnemonicParsing="false" />
+            <Label layoutX="27.0" layoutY="322.0" text="Status:">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Separator layoutX="29.0" layoutY="361.0" prefHeight="6.0" prefWidth="701.0" />
+            <TextField fx:id="UpdateStatusField" layoutX="165.0" layoutY="329.0" prefHeight="31.0" prefWidth="563.0" promptText="Enter New Status" />
+            <Label fx:id="ageError" layoutX="400.0" layoutY="272.0" prefHeight="21.0" prefWidth="227.0" textFill="RED" />
          </children>
       </AnchorPane>
    </center>

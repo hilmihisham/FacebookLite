@@ -1,56 +1,84 @@
-import javafx.event.EventHandler;
+import com.mongodb.operation.UpdateUserOperation;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 
 public class SettingsUIController {
 
     GUIManager gui;
     FBLManager fbl;
 
+    @FXML
+    TextField UpdateAgeField;
+    @FXML
+    Label ageError;
+    @FXML
+    TextField UpdateStatusField;
+    @FXML
+    CheckBox HideFriendsCBox;
+    @FXML
+    CheckBox HideAgeCBox;
+    @FXML
+    CheckBox HidePostsCBox;
+    @FXML
+    CheckBox HideStatusCBox;
+
     public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
         this.fbl = fbl;
+        addTextFieldConstraints();
+        loadSettings();
     }
 
-    @FXML
-    TextField UpdateAgeField;
-
-    @FXML
-    CheckBox HideFriendsCBox;
-
-    @FXML
-    CheckBox HideAgeCBox;
-
-    @FXML
-    CheckBox HidePostsCBox;
-
-    public void addTextfieldConstraints()
-    {
-// force the field to be numeric only
-        UpdateAgeField.setOnKeyTyped(new EventHandler<KeyEvent>() {
+    private void addTextFieldConstraints() {
+        // force the age field to be numeric only
+        UpdateAgeField.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void handle(KeyEvent event) {
-                if(!UpdateAgeField.getText().matches("\\d*")) {
-                    UpdateAgeField.setText(UpdateAgeField.getText().replaceAll("[^\\d]", ""));
-                }
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!newValue.matches("[0-9]*"))
+                    UpdateAgeField.setText(oldValue);
             }
         });
     }
 
+    private void loadSettings(){
+        HideFriendsCBox.setSelected(fbl.getHideFriends());
+        HideAgeCBox.setSelected(fbl.getHideAge());
+        HidePostsCBox.setSelected(fbl.getHidePosts());
+        HideStatusCBox.setSelected(fbl.getHideStatus());
+        UpdateAgeField.setText("" + fbl.getAge());
+        UpdateStatusField.setText(fbl.getStatus());
+    }
+
     @FXML
-    public void exit() throws Exception
-    {
+    public void exit() throws Exception {
         gui.loadHomePage();
     }
 
     @FXML
-    public void save() throws Exception
-    {
+    public void save() throws Exception{
         //save the settings changes code here
 
-        //return to home page
-        exit();
+        //Age error checks:
+        int inputAge;
+        try{ inputAge = Integer.parseInt(UpdateAgeField.getText()); }
+        catch(Exception e){ inputAge=0; }
+        if(inputAge<18 || inputAge>999) {
+            ageError.setText("Invalid Age.");
+            return;
+        }
+
+        //Write out settings:
+        fbl.setAge(inputAge);
+        fbl.setStatus(UpdateStatusField.getText());
+        fbl.setHideFriends(HideFriendsCBox.isSelected());
+        fbl.setHidePosts(HidePostsCBox.isSelected());
+        fbl.setHideAge(HideAgeCBox.isSelected());
+        fbl.setHideStatus(HideStatusCBox.isSelected());
+
+        exit(); //return to home page
     }
 }

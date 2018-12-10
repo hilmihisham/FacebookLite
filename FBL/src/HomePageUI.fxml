@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomePageUIController">
@@ -22,6 +23,7 @@
                         <Font size="21.0" />
                     </font>
                 </Button>
+            <Button layoutX="72.0" layoutY="11.0" mnemonicParsing="false" onAction="#logout" prefHeight="45.0" prefWidth="90.0" text="Logout" />
             </children>
         </AnchorPane>
     </top>
@@ -40,7 +42,24 @@
     <left>
         <AnchorPane prefHeight="530.0" prefWidth="210.0" BorderPane.alignment="CENTER">
             <children>
-                <Pane prefHeight="265.0" prefWidth="214.0" AnchorPane.topAnchor="0.0" />
+                <Pane prefHeight="265.0" prefWidth="214.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Circle fill="DODGERBLUE" layoutX="107.0" layoutY="67.0" radius="53.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="name" layoutX="13.0" layoutY="133.0" prefHeight="21.0" prefWidth="188.0" text="Name" textAlignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Label>
+                  <Label fx:id="age" layoutX="13.0" layoutY="160.0" prefHeight="21.0" prefWidth="188.0" text="Age" textAlignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="status" layoutX="13.0" layoutY="187.0" prefHeight="75.0" prefWidth="188.0" text="Status" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children></Pane>
                 <Pane layoutY="272.0" prefHeight="265.0" prefWidth="215.0" AnchorPane.bottomAnchor="0.0" />
             </children>
         </AnchorPane>

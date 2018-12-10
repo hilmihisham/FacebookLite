@@ -288,6 +288,63 @@ public class DatabaseController {
         System.out.println(me + " is now following " + other);
     }
 
+    public String getUserFirstName(String un){
+        //returns the first name of a user
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un));
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+        String fName = "";
+        try {
+            if (cursor1.hasNext()) {
+                Document userDoc = cursor1.next();
+                fName = userDoc.getString("firstName");
+            }
+        }
+        finally {
+            cursor1.close();
+        }
+
+        return fName;
+    }
+
+    public String getUserLastName(String un){
+        //returns the last name of a user
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un));
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+        String lName = "";
+        try {
+            if (cursor1.hasNext()) {
+                Document userDoc = cursor1.next();
+                lName = userDoc.getString("lastName");
+            }
+        }
+        finally {
+            cursor1.close();
+        }
+
+        return lName;
+    }
+
+    public int getUserAge(String un){
+        //returns the first name of a user
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un));
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
+        int age = 18;
+        try {
+            if (cursor1.hasNext()) {
+                Document userDoc = cursor1.next();
+                age = userDoc.getInteger("age");
+            }
+        }
+        finally {
+            cursor1.close();
+        }
+
+        return age;
+    }
+
     // can be use to get friend's profile, TODO limit of what data we can get from this
     public void getUser(String un) {
 
