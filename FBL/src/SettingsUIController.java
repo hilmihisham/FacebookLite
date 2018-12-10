@@ -1,6 +1,8 @@
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 
 public class SettingsUIController {
 
@@ -26,7 +28,15 @@ public class SettingsUIController {
 
     public void addTextfieldConstraints()
     {
-
+// force the field to be numeric only
+        UpdateAgeField.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(!UpdateAgeField.getText().matches("\\d*")) {
+                    UpdateAgeField.setText(UpdateAgeField.getText().replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     @FXML
