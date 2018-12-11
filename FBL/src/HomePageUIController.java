@@ -104,6 +104,8 @@ public class HomePageUIController {
             fbl.addNewPost(postTextArea.getText());
             // update scroll pane
             buildHomepagePosts();
+            // clear out text area
+            postTextArea.setText("");
         }
     }
 
