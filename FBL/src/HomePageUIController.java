@@ -40,6 +40,11 @@ public class HomePageUIController {
     }
 
     @FXML
+    public void profile() throws Exception{
+        gui.loadProfileUIPage();
+    }
+
+    @FXML
     public void settings() throws Exception {
         gui.loadSettingUIPage();
     }

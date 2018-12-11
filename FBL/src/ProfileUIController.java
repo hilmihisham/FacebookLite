@@ -1,4 +1,5 @@
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class ProfileUIController {
@@ -11,7 +12,7 @@ public class ProfileUIController {
     }
 
     @FXML
-    TextField ProfileUIUserName;
+    Label ProfileNameLabel;
 
 
 }
