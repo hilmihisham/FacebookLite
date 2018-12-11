@@ -20,9 +20,9 @@
                         <Font name="System Bold" size="22.0" />
                     </font>
                 </Label>
-                <Button fx:id="SettingsButton" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#settings" prefHeight="21.0" prefWidth="47.0" text="..." textAlignment="CENTER">
+                <Button fx:id="SettingsButton" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#settings" prefHeight="21.0" prefWidth="47.0" text="⚙" textAlignment="CENTER">
                     <font>
-                        <Font size="21.0" />
+                        <Font size="24.0" />
                     </font>
                 </Button>
             <Button layoutX="72.0" layoutY="11.0" mnemonicParsing="false" onAction="#logout" prefHeight="45.0" prefWidth="90.0" text="Logout" />
@@ -58,7 +58,8 @@
                   <Label fx:id="name" layoutX="13.0" layoutY="133.0" prefHeight="21.0" prefWidth="188.0" text="Name" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
-                     </font></Label>
+                     </font>
+                  </Label>
                   <Label fx:id="age" layoutX="13.0" layoutY="160.0" prefHeight="21.0" prefWidth="188.0" text="Age" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />

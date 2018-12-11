@@ -29,9 +29,9 @@
                   <Font name="System Bold" size="22.0" />
                </font>
             </Label>
-            <Button layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#exit" prefHeight="43.0" prefWidth="34.0" text="X">
+            <Button layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#exit" prefHeight="41.0" prefWidth="117.0" text="&lt; Home">
                <font>
-                  <Font size="26.0" />
+                  <Font size="21.0" />
                </font>
             </Button>
          </children>
