@@ -18,6 +18,7 @@ public class FBLManager {
 
     public UserDoc doc;
     public UserPosts userPost;
+    public UserFriends friendList;
 
     public FBLManager() {
         dbc = new DatabaseController();
@@ -44,10 +45,24 @@ public class FBLManager {
             hideStatus = doc.getHideStatus();
             //System.out.println(fName + " " + lName + " " + age + " Status: " + status);
             //System.out.println("" + hideStatus + hideAge + hidePosts + hideFriends);
+
+            // initialize and get friends list during login
+            friendList = new UserFriends();
+            getFriendsList();
+            getSuggestedFriends();
+
             return true;
         }
         else
             return false;
+    }
+
+    private void getFriendsList() {
+        dbc.getFollowList(userName, friendList);
+    }
+
+    private void getSuggestedFriends() {
+        dbc.getSuggestedFriends(userName, friendList);
     }
 
     public void logout() {
@@ -135,7 +150,7 @@ public class FBLManager {
     public void getHomepagePosts() {
         if (userName.equals(""))
             return;
-        dbc.getEveryonePosts(userName, userPost);
+        dbc.getEveryonePosts(userName, userPost, friendList.friendsList);
     }
 
     // Get all posts from the other user we clicked on

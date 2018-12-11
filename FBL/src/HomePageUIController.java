@@ -1,9 +1,9 @@
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.bson.Document;
 
@@ -24,6 +24,10 @@ public class HomePageUIController {
     TextArea postTextArea;
     @FXML
     ScrollPane panePosts;
+    @FXML
+    ScrollPane paneFriends;
+    @FXML
+    ScrollPane paneSuggestion;
 
     public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
@@ -32,13 +36,19 @@ public class HomePageUIController {
         loadUserData();
 
         buildHomepagePosts();
+        buildFriendsList();
+        buildSuggestionList();
     }
+
 
     // dynamically set setting of some panel, etc
     private void buildSceneLayout() {
         name.setWrapText(true);
         postTextArea.setWrapText(true);
         panePosts.setPadding(new Insets(5));
+        paneFriends.setPadding(new Insets(5));
+        paneSuggestion.setPadding(new Insets(5));
+
     }
 
     private void buildHomepagePosts() {
@@ -67,6 +77,54 @@ public class HomePageUIController {
 
         // add VBox to scrollPanel
         panePosts.setContent(postsVBox);
+    }
+
+    private void buildFriendsList() {
+        // VBox of holding all friends' username
+        VBox friendsVBox = new VBox(5);
+
+        for (String name : fbl.friendList.friendsList) {
+
+            // TODO design decision pending
+            Button friendButton = new Button("@" + name);
+            friendButton.setPrefWidth(190);
+            friendButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("Jumping to " + friendButton.getText() + " profile..");
+                    System.out.println(name);
+                }
+            });
+
+            friendsVBox.getChildren().add(friendButton);
+        }
+
+        paneFriends.setContent(friendsVBox);
+    }
+
+    private void buildSuggestionList() {
+        // VBox of holding all friends' username
+        VBox suggestVBox = new VBox(5);
+
+        for (String name : fbl.friendList.suggestion) {
+
+            System.out.println("Suggestion: " + name);
+
+            // TODO design decision pending
+            Button friendButton = new Button("@" + name);
+            friendButton.setPrefWidth(190);
+            friendButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("Jumping to " + friendButton.getText() + " profile..");
+                    System.out.println(name);
+                }
+            });
+
+            suggestVBox.getChildren().add(friendButton);
+        }
+
+        paneSuggestion.setContent(suggestVBox);
     }
 
     private void loadUserData(){

@@ -196,7 +196,7 @@ public class DatabaseController {
         MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
         try {
             while (cursor1.hasNext()) {
-                isPrivate = (boolean) cursor1.next().get("hideposts");
+                isPrivate = cursor1.next().getBoolean("hideposts");
             }
         } finally {
             cursor1.close();
@@ -227,7 +227,7 @@ public class DatabaseController {
             // print
             for (Document post : up.postDocs) {
                 System.out.println(post.toJson());
-                System.out.println("^^^ post date: " + new Date((long) post.get("date")).toString() + "\n");
+                System.out.println("^^^ post date: " + new Date(post.getLong("date")).toString() + "\n");
             }
         }
         else {
@@ -237,12 +237,12 @@ public class DatabaseController {
 
     // get all posts from everyone we follow
     // use for homepage
-    public void getEveryonePosts(String myUN, UserPosts up) {
+    public void getEveryonePosts(String myUN, UserPosts up, ArrayList<String> following) {
 
         // get who I'm following
-        ArrayList<String> following = getFollowList(myUN);
-        following.add(myUN); // "add" myself into follow list so I can see my own post in homepage
-        System.out.println("Follow = " + following);
+        //ArrayList<String> following = getFollowList(myUN);
+        //following.add(myUN); // "add" myself into follow list so I can see my own post in homepage
+        //System.out.println("Follow = " + following);
 
         // hold all posts from everyone I follow here
         //ArrayList<Document> allPosts = new ArrayList<>();
@@ -258,11 +258,11 @@ public class DatabaseController {
         try {
             while (cursor.hasNext()) {
                 Document currCursor = cursor.next(); // get current document from cursor
-                String cursorUN = currCursor.get("username").toString(); // see username of that document
+                String cursorUN = currCursor.getString("username"); // see username of that document
                 //System.out.println("cursorUN = " + cursorUN);
 
-                // if I follow user of current document
-                if (following.contains(cursorUN))
+                // if post by me or I follow user of current document
+                if (cursorUN.equals(myUN) || following.contains(cursorUN))
                     up.postDocs.add(currCursor); // add that post into postDocs
             }
         } finally {
@@ -275,43 +275,60 @@ public class DatabaseController {
         }
     }
 
-    // get the list of who this user follow
-    public ArrayList<String> getFollowList(String un) {
+    // get the list of who this user follow, send it back to UserFriends class
+    public void getFollowList(String un, UserFriends uf) {
         // accessing follow list table (collection)
         MongoCollection<Document> followColl = db.getCollection("followList");
 
         // find user's document
-        Document followDoc = (Document) followColl.find(Filters.eq("username", un)).first();
+        Document followDoc = followColl.find(Filters.eq("username", un)).first();
         //System.out.println(followDoc.toJson());
 
-        // get username of everyone that this user is following
-        ArrayList<String> following = (ArrayList<String>) followDoc.get("following");
+        // get username of everyone that this user is following into UserFriends class
+        uf.friendsList.addAll((ArrayList<String>) followDoc.get("following"));
 
+        // debugging
         /*
-        for (String followingWho: following) {
-            System.out.println("\nFollowing: " + followingWho.toString());
-            GetUser(followingWho.toString());
+        for (String followingWho: uf.friendsList) {
+            System.out.println("Following: " + followingWho.toString());
+            //GetUser(followingWho.toString());
         }
         */
+    }
 
-        return following;
+    public void getSuggestedFriends(String un, UserFriends uf) {
+        // accessing registeredUser table (collection)
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+        FindIterable<Document> allDocs = collRU.find(); // get all documents
+        MongoCursor<Document> cursor = allDocs.iterator(); // set up cursor to iterate rows of documents
+        try {
+            while (cursor.hasNext()) {
+                String nextUsername = cursor.next().getString("username");
+                if (!nextUsername.equals(un) && !uf.friendsList.contains(nextUsername)) {
+                    uf.suggestion.add(nextUsername);
+                }
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
     // following other user
-    public void followingOtherUser(String me, String other) {
+    public void followingOtherUser(String me, String other, UserFriends uf) {
         // accessing follow list table (collection)
         MongoCollection<Document> followColl = db.getCollection("followList");
 
         // get the ArrayList of who "me" is following
-        ArrayList<String> following = getFollowList(me);
+        //ArrayList<String> following = getFollowList(me);
 
         // adding other user to my following list
-        following.add(other);
+        if (!uf.friendsList.isEmpty()) uf.friendsList.add(other);
 
         // updating database
-        followColl.updateOne(
+        followColl.findOneAndUpdate(
                 eq("username", me),
-                combine(set("following", following))
+                Updates.set("following", uf.friendsList)
         );
 
         System.out.println(me + " is now following " + other);
@@ -322,9 +339,7 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
         // updating user database
         collRU.findOneAndUpdate(
-                and(
-                        eq("username", un)
-                ),
+                eq("username", un),
                 Updates.set("status", status)
         );
     }
@@ -454,5 +469,7 @@ public class DatabaseController {
         //dbc.deletePost("test", new Date());
         //dbc.setAge("hilmi", 100);
         //dbc.getOneUserPost("hughman", new UserPosts());
+
+        //dbc.getFollowList("admin");
     }
 }
