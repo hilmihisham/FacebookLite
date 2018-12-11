@@ -77,6 +77,10 @@ public class FBLManager {
         return dbc.registerNewUser(user, pass, fName, lName, sQuestion, sAnswer, age);
     }
 
+    public String getUsername() {
+        return userName;
+    }
+
     public String getFirstName(){
         return fName;
     }
@@ -159,5 +163,11 @@ public class FBLManager {
         if(userName.equals(""))
             return;
         dbc.getOneUserPost(un, userPost);
+    }
+
+    public void deletePost(String un, long date) {
+        if (un.equals(userName)) {
+            dbc.deletePost(un, date);
+        }
     }
 }
