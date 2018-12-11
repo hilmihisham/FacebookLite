@@ -169,7 +169,7 @@ public class DatabaseController {
         MongoCollection<Document> postColl = db.getCollection("postsRecord");
 
         // get current date
-        Date now = new Date();
+        long now = new Date().getTime();
 
         // creating new user document based on the input from UI
         Document newPost = new Document("post", post)
@@ -193,6 +193,7 @@ public class DatabaseController {
         //ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
         userPost.clear();
 
+        // TODO sorting date, since we change it to long format
         FindIterable<Document> postDocs = postColl
                 .find(Filters.eq("username", un)) // get all documents from this user
                 .sort(Sorts.descending("date")); // sorts by newest post first
@@ -403,6 +404,18 @@ public class DatabaseController {
         //getUser(un);
     }
 
+    public void deletePost(String un, long postDate) {
+        // accessing posts table
+        MongoCollection<Document> postColl = db.getCollection("postsRecord");
+
+        postColl.findOneAndDelete(
+                and(
+                        eq("username", un),
+                        eq("date", postDate)
+                )
+        );
+    }
+
 
     // ------------------------------------------------------------------ //
     // test + debug purposes only
@@ -415,8 +428,11 @@ public class DatabaseController {
         //System.out.println(dbc.getFollowList("admin"));
         //dbc.followingOtherUser("test", "hilmi");
 
-        //dbc.createNewPost("tom", "This don\'t even have music supported, unlike MySpace. Lame!");
+        //dbc.createNewPost("test", "testpost");
         //dbc.getUserPost("tom");
         //dbc.getEveryonePosts("admin");
+
+        //dbc.deletePost("test", 61505317734509L);
+        //dbc.deletePost("test", new Date());
     }
 }

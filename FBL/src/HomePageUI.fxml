@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -11,7 +16,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomePageUIController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomePageUIController">
     <top>
         <AnchorPane prefHeight="70.0" prefWidth="800.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
             <children>
@@ -20,29 +25,29 @@
                         <Font name="System Bold" size="22.0" />
                     </font>
                 </Label>
-                <Button fx:id="SettingsButton" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#settings" prefHeight="21.0" prefWidth="47.0" text="..." textAlignment="CENTER">
-                    <font>
-                        <Font size="21.0" />
-                    </font>
+                <Button fx:id="SettingsButton" mnemonicParsing="false" onAction="#settings" prefHeight="40.0" prefWidth="43.0" text="⚙" textAlignment="CENTER" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
                 </Button>
-            <Button layoutX="72.0" layoutY="11.0" mnemonicParsing="false" onAction="#logout" prefHeight="45.0" prefWidth="90.0" text="Logout" />
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="40.0" prefWidth="90.0" text="Logout" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="15.0">
+               <font>
+                  <Font size="19.0" />
+               </font></Button>
             </children>
         </AnchorPane>
     </top>
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="414.0" BorderPane.alignment="CENTER">
             <children>
-                <Pane prefHeight="160.0" prefWidth="391.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane prefHeight="135.0" prefWidth="380.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                <children>
-                  <Button layoutX="339.0" layoutY="130.0" mnemonicParsing="false" text="Post" />
-                  <Label layoutX="14.0" layoutY="5.0" prefHeight="17.0" prefWidth="94.0" text="Post to Wall">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <TextArea layoutX="8.0" layoutY="27.0" prefHeight="91.0" prefWidth="380.0" />
-               </children></Pane>
-                <ScrollPane fitToWidth="true" layoutY="135.0" prefHeight="370.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <Label text="Post to Wall" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="3.0" />
+                  <TextArea fx:id="postTextArea" prefHeight="60.0" promptText="What're you thinking?" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
+                  <Button mnemonicParsing="false" text="Post" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+                <ScrollPane fitToWidth="true" layoutY="135.0" prefHeight="370.0" prefWidth="392.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="370.0" prefWidth="390.0" />
                     </content>
@@ -82,12 +87,12 @@
     <right>
         <AnchorPane prefHeight="200.0" prefWidth="210.0" BorderPane.alignment="CENTER">
             <children>
-                <ScrollPane fitToWidth="true" prefHeight="265.0" prefWidth="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <ScrollPane fitToWidth="true" prefHeight="265.0" prefWidth="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="265.0" prefWidth="200.0" />
                     </content>
                 </ScrollPane>
-                <ScrollPane fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="265.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <ScrollPane fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="265.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="0.0">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="265.0" prefWidth="200.0" />
                     </content>

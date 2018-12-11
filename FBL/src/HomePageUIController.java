@@ -1,6 +1,7 @@
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 
 public class HomePageUIController {
 
@@ -13,11 +14,18 @@ public class HomePageUIController {
     Label age;
     @FXML
     Label status;
+    @FXML
+    TextArea postTextArea;
 
     public void initialize(GUIManager gui, FBLManager fbl) {
         this.gui = gui;
         this.fbl = fbl;
+        buildSceneLayout();
         loadUserData();
+    }
+
+    private void buildSceneLayout() {
+        postTextArea.setWrapText(true);
     }
 
     private void loadUserData(){
