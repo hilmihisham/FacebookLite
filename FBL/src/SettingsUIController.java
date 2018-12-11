@@ -74,10 +74,8 @@ public class SettingsUIController {
         //Write out settings:
         fbl.setAge(inputAge);
         fbl.setStatus(UpdateStatusField.getText());
-        fbl.setHideFriends(HideFriendsCBox.isSelected());
-        fbl.setHidePosts(HidePostsCBox.isSelected());
-        fbl.setHideAge(HideAgeCBox.isSelected());
-        fbl.setHideStatus(HideStatusCBox.isSelected());
+        fbl.setHideSettings(HideFriendsCBox.isSelected(),HidePostsCBox.isSelected(),
+                HideAgeCBox.isSelected(),HideStatusCBox.isSelected());
 
         exit(); //return to home page
     }
