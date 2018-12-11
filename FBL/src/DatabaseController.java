@@ -111,7 +111,7 @@ public class DatabaseController {
         return exist;
     }
 
-    // login to account, TODO decide to use User class or create new, or just use db data to set up text in GUI
+    // login to account
     public boolean loginUser(String username, String password, UserDoc doc) {
 
         boolean isSuccess = false;
@@ -169,7 +169,7 @@ public class DatabaseController {
         MongoCollection<Document> postColl = db.getCollection("postsRecord");
 
         // get current date
-        Date now = new Date();
+        long now = new Date().getTime();
 
         // creating new user document based on the input from UI
         Document newPost = new Document("post", post)
@@ -184,46 +184,69 @@ public class DatabaseController {
 
     // get sorted post from this one user
     // can be used when we visiting other people's profile
-    public void getUserPost(String un, ArrayList<Document> userPost) {
+    public void getOneUserPost(String un, UserPosts up) {
 
-        // accessing posts table
-        MongoCollection<Document> postColl = db.getCollection("postsRecord");
+        // see if that user have made their posts private or not
+        boolean isPrivate = false;
 
-        //TODO Hilmi, i made this change below (and added new argument above)
-        //ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
-        userPost.clear();
+        // accessing registeredUser table (collection)
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
-        FindIterable<Document> postDocs = postColl
-                .find(Filters.eq("username", un)) // get all documents from this user
-                .sort(Sorts.descending("date")); // sorts by newest post first
-
-        MongoCursor<Document> cursor = postDocs.iterator(); // set up cursor to iterate rows of documents
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un)); // find document by filters
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
         try {
-            while (cursor.hasNext()) {
-                //System.out.println(cursor.next().toJson()); // print username's document in String
-                userPost.add(cursor.next()); // add every post Documents into allPosts
+            while (cursor1.hasNext()) {
+                isPrivate = cursor1.next().getBoolean("hideposts");
             }
         } finally {
-            cursor.close();
+            cursor1.close();
         }
 
-        // print
-        for (Document post: userPost) {
-            System.out.println(post.toJson());
+        if (!isPrivate) {
+            // accessing posts table
+            MongoCollection<Document> postColl = db.getCollection("postsRecord");
+
+            //ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
+            if (!up.postDocs.isEmpty())
+                up.postDocs.clear(); // clearing out the arrayList first
+
+            FindIterable<Document> postDocs = postColl
+                    .find(Filters.eq("username", un)) // get all documents from this user
+                    .sort(Sorts.descending("date")); // sorts by newest post first
+
+            MongoCursor<Document> cursor = postDocs.iterator(); // set up cursor to iterate rows of documents
+            try {
+                while (cursor.hasNext()) {
+                    //System.out.println(cursor.next().toJson()); // print username's document in String
+                    up.postDocs.add(cursor.next()); // add every post Documents into allPosts
+                }
+            } finally {
+                cursor.close();
+            }
+
+            // print
+            for (Document post : up.postDocs) {
+                System.out.println(post.toJson());
+                System.out.println("^^^ post date: " + new Date(post.getLong("date")).toString() + "\n");
+            }
+        }
+        else {
+            System.out.println(un + " has made their posts private");
         }
     }
 
     // get all posts from everyone we follow
     // use for homepage
-    public void getEveryonePosts(String myUN) {
+    public void getEveryonePosts(String myUN, UserPosts up, ArrayList<String> following) {
 
         // get who I'm following
-        ArrayList<String> following = getFollowList(myUN);
-        following.add(myUN); // "add" myself into follow list so I can see my own post in homepage
-        System.out.println("Follow = " + following);
+        //ArrayList<String> following = getFollowList(myUN);
+        //following.add(myUN); // "add" myself into follow list so I can see my own post in homepage
+        //System.out.println("Follow = " + following);
 
         // hold all posts from everyone I follow here
-        ArrayList<Document> allPosts = new ArrayList<>();
+        //ArrayList<Document> allPosts = new ArrayList<>();
+        if (!up.postDocs.isEmpty()) up.postDocs.clear();
 
         // accessing posts table
         MongoCollection<Document> postColl = db.getCollection("postsRecord");
@@ -235,60 +258,77 @@ public class DatabaseController {
         try {
             while (cursor.hasNext()) {
                 Document currCursor = cursor.next(); // get current document from cursor
-                String cursorUN = currCursor.get("username").toString(); // see username of that document
+                String cursorUN = currCursor.getString("username"); // see username of that document
                 //System.out.println("cursorUN = " + cursorUN);
 
-                // if I follow user of current document
-                if (following.contains(cursorUN))
-                    allPosts.add(currCursor); // add that post into allPosts
+                // if post by me or I follow user of current document
+                if (cursorUN.equals(myUN) || following.contains(cursorUN))
+                    up.postDocs.add(currCursor); // add that post into postDocs
             }
         } finally {
             cursor.close();
         }
 
         // print
-        for (Document post: allPosts) {
+        for (Document post: up.postDocs) {
             System.out.println(post.toJson());
         }
     }
 
-    // get the list of who this user follow
-    public ArrayList<String> getFollowList(String un) {
+    // get the list of who this user follow, send it back to UserFriends class
+    public void getFollowList(String un, UserFriends uf) {
         // accessing follow list table (collection)
         MongoCollection<Document> followColl = db.getCollection("followList");
 
         // find user's document
-        Document followDoc = (Document) followColl.find(Filters.eq("username", un)).first();
+        Document followDoc = followColl.find(Filters.eq("username", un)).first();
         //System.out.println(followDoc.toJson());
 
-        // get username of everyone that this user is following
-        ArrayList<String> following = (ArrayList<String>) followDoc.get("following");
+        // get username of everyone that this user is following into UserFriends class
+        uf.friendsList.addAll((ArrayList<String>) followDoc.get("following"));
 
+        // debugging
         /*
-        for (String followingWho: following) {
-            System.out.println("\nFollowing: " + followingWho.toString());
-            GetUser(followingWho.toString());
+        for (String followingWho: uf.friendsList) {
+            System.out.println("Following: " + followingWho.toString());
+            //GetUser(followingWho.toString());
         }
         */
+    }
 
-        return following;
+    public void getSuggestedFriends(String un, UserFriends uf) {
+        // accessing registeredUser table (collection)
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+        FindIterable<Document> allDocs = collRU.find(); // get all documents
+        MongoCursor<Document> cursor = allDocs.iterator(); // set up cursor to iterate rows of documents
+        try {
+            while (cursor.hasNext()) {
+                String nextUsername = cursor.next().getString("username");
+                if (!nextUsername.equals(un) && !uf.friendsList.contains(nextUsername)) {
+                    uf.suggestion.add(nextUsername);
+                }
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
     // following other user
-    public void followingOtherUser(String me, String other) {
+    public void followingOtherUser(String me, String other, UserFriends uf) {
         // accessing follow list table (collection)
         MongoCollection<Document> followColl = db.getCollection("followList");
 
         // get the ArrayList of who "me" is following
-        ArrayList<String> following = getFollowList(me);
+        //ArrayList<String> following = getFollowList(me);
 
         // adding other user to my following list
-        following.add(other);
+        if (!uf.friendsList.isEmpty()) uf.friendsList.add(other);
 
         // updating database
-        followColl.updateOne(
+        followColl.findOneAndUpdate(
                 eq("username", me),
-                combine(set("following", following))
+                Updates.set("following", uf.friendsList)
         );
 
         System.out.println(me + " is now following " + other);
@@ -299,9 +339,7 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
         // updating user database
         collRU.findOneAndUpdate(
-                and(
-                        eq("username", un)
-                ),
+                eq("username", un),
                 Updates.set("status", status)
         );
     }
@@ -311,9 +349,7 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
         // updating user database
         collRU.findOneAndUpdate(
-                and(
-                        eq("username", un)
-                ),
+                eq("username", un),
                 Updates.set("age", age)
         );
     }
@@ -323,9 +359,7 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
         // updating user database
         collRU.findOneAndUpdate(
-                and(
-                        eq("username", un)
-                ),
+                eq("username", un),
                 and(
                         Updates.set("hidefriends", friends),
                         Updates.set("hideposts",posts),
@@ -403,6 +437,18 @@ public class DatabaseController {
         //getUser(un);
     }
 
+    public void deletePost(String un, long postDate) {
+        // accessing posts table
+        MongoCollection<Document> postColl = db.getCollection("postsRecord");
+
+        postColl.findOneAndDelete(
+                and(
+                        eq("username", un),
+                        eq("date", postDate)
+                )
+        );
+    }
+
 
     // ------------------------------------------------------------------ //
     // test + debug purposes only
@@ -415,8 +461,15 @@ public class DatabaseController {
         //System.out.println(dbc.getFollowList("admin"));
         //dbc.followingOtherUser("test", "hilmi");
 
-        //dbc.createNewPost("tom", "This don\'t even have music supported, unlike MySpace. Lame!");
+        //dbc.createNewPost("tom", "yes it is..");
         //dbc.getUserPost("tom");
         //dbc.getEveryonePosts("admin");
+
+        //dbc.deletePost("test", 61505317734509L);
+        //dbc.deletePost("test", new Date());
+        //dbc.setAge("hilmi", 100);
+        //dbc.getOneUserPost("hughman", new UserPosts());
+
+        //dbc.getFollowList("admin");
     }
 }
