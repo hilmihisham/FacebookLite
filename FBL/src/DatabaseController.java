@@ -62,7 +62,12 @@ public class DatabaseController {
                     .append("lastName", ln)
                     .append("age", age)
                     .append("secureQ", sq)
-                    .append("secureA", sa.toLowerCase());
+                    .append("secureA", sa.toLowerCase())
+                    .append("status", "")
+                    .append("hidefriends",false)
+                    .append("hideposts",false)
+                    .append("hideage",false)
+                    .append("hidestatus",false);
 
             // insert newUser into registeredUser collection
             collRU.insertOne(newUser);
@@ -107,7 +112,7 @@ public class DatabaseController {
     }
 
     // login to account, TODO decide to use User class or create new, or just use db data to set up text in GUI
-    public boolean loginUser(String username, String password) {
+    public boolean loginUser(String username, String password, UserDoc doc) {
 
         boolean isSuccess = false;
 
@@ -135,6 +140,7 @@ public class DatabaseController {
                 isSuccess = true; // successfully log in
 
                 Document userDoc = cursor1.next(); // JSON string
+                doc.doc = new Document(userDoc);
 
                 System.out.println("\n\nPrint " + username + "\'s data\n--------------------\n");
                 System.out.println(userDoc.toJson()); // print username's document in JSON
@@ -288,61 +294,45 @@ public class DatabaseController {
         System.out.println(me + " is now following " + other);
     }
 
-    public String getUserFirstName(String un){
-        //returns the first name of a user
+    public void setStatus(String un, String status){
+        //update status in database for user
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
-        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un));
-        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
-        String fName = "";
-        try {
-            if (cursor1.hasNext()) {
-                Document userDoc = cursor1.next();
-                fName = userDoc.getString("firstName");
-            }
-        }
-        finally {
-            cursor1.close();
-        }
-
-        return fName;
+        // updating user database
+        collRU.findOneAndUpdate(
+                and(
+                        eq("username", un)
+                ),
+                Updates.set("status", status)
+        );
     }
 
-    public String getUserLastName(String un){
-        //returns the last name of a user
+    public void setAge(String un, int age){
+        //update age in database for user
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
-        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un));
-        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
-        String lName = "";
-        try {
-            if (cursor1.hasNext()) {
-                Document userDoc = cursor1.next();
-                lName = userDoc.getString("lastName");
-            }
-        }
-        finally {
-            cursor1.close();
-        }
-
-        return lName;
+        // updating user database
+        collRU.findOneAndUpdate(
+                and(
+                        eq("username", un)
+                ),
+                Updates.set("age", age)
+        );
     }
 
-    public int getUserAge(String un){
-        //returns the first name of a user
+    public void setHideSettings(String un, boolean friends, boolean posts, boolean age, boolean status){
+        //update age in database for user
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
-        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un));
-        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
-        int age = 18;
-        try {
-            if (cursor1.hasNext()) {
-                Document userDoc = cursor1.next();
-                age = userDoc.getInteger("age");
-            }
-        }
-        finally {
-            cursor1.close();
-        }
-
-        return age;
+        // updating user database
+        collRU.findOneAndUpdate(
+                and(
+                        eq("username", un)
+                ),
+                and(
+                        Updates.set("hidefriends", friends),
+                        Updates.set("hideposts",posts),
+                        Updates.set("hideage",age),
+                        Updates.set("hidestatus",status)
+                )
+        );
     }
 
     // can be use to get friend's profile, TODO limit of what data we can get from this

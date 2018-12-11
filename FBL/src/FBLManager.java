@@ -25,12 +25,20 @@ public class FBLManager {
 
     public boolean login(String user, String pass) {
         //Attempt to login with given username and password
-        if(dbc.loginUser(user, pass)) { // find matching credential in db
+        UserDoc doc = new UserDoc();
+        if(dbc.loginUser(user, pass, doc)) { // find matching credential in db
             userName = user;
             //load in user settings:
-            fName = dbc.getUserFirstName(userName);
-            lName = dbc.getUserLastName(userName);
-            age = dbc.getUserAge(userName);
+            fName = doc.getFirstName();
+            lName = doc.getLastName();
+            age = doc.getAge();
+            status = doc.getStatus();
+            hideFriends = doc.getHideFriends();
+            hidePosts = doc.getHidePosts();
+            hideAge = doc.getHideAge();
+            hideStatus = doc.getHideStatus();
+            //System.out.println(fName + " " + lName + " " + age + " Status: " + status);
+            //System.out.println("" + hideStatus + hideAge + hidePosts + hideFriends);
             return true;
         }
         else
@@ -84,43 +92,23 @@ public class FBLManager {
     public void setStatus(String status){
         if(!this.status.equals(status)) {
             this.status = status;
-            //TODO change this in database too
+            dbc.setStatus(userName,status);
         }
     }
 
     public void setAge(int age){
         if(!(this.age == age)) {
             this.age = age;
-            //TODO change this in database too
+            dbc.setAge(userName,age);
         }
     }
 
-    public void setHidePosts(boolean hide){
-        if(!(hidePosts == hide)) {
-            hidePosts = hide;
-            //TODO change this in database too
-        }
-    }
-
-    public void setHideFriends(boolean hide){
-        if(!(hideFriends == hide)) {
-            hideFriends = hide;
-            //TODO change this in database too
-        }
-    }
-
-    public void setHideAge(boolean hide){
-        if(!(hideAge == hide)) {
-            hideAge = hide;
-            //TODO change this in database too
-        }
-    }
-
-    public void setHideStatus(boolean hide){
-        if(!hideStatus == hide) {
-            hideStatus = hide;
-            //TODO change this in database too
-        }
+    public void setHideSettings(boolean friends, boolean posts, boolean age, boolean status){
+        hideFriends = friends;
+        hidePosts = posts;
+        hideAge = age;
+        hideStatus = status;
+        dbc.setHideSettings(userName,friends,posts,age,status);
     }
 
     public boolean getSecureQuestion(String un, ForgotPasswordController.UserData ud) {
