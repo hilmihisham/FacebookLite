@@ -14,5 +14,9 @@ public class ProfileUIController {
     @FXML
     Label ProfileNameLabel;
 
+    @FXML
+    public void back() throws Exception {
+        gui.loadHomePage();
+    }
 
 }
