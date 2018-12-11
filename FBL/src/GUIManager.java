@@ -3,7 +3,10 @@
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class GUIManager {
 
@@ -20,6 +23,7 @@ public class GUIManager {
         scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false); // no to resize!
+        primaryStage.getIcons().add(new Image("." + File.separator + "Resources" + File.separator + "icons.png"));
         //primaryStage.setMaximized(true);
         primaryStage.show();
     }

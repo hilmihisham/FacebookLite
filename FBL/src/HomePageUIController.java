@@ -4,10 +4,12 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.bson.Document;
 
 import java.util.Date;
+import java.util.Optional;
 
 public class HomePageUIController {
 
@@ -60,19 +62,55 @@ public class HomePageUIController {
         for (Document postDocs: fbl.userPost.postDocs) {
 
             // TODO change to something else instead of just label?
+
+            AnchorPane postPanel = new AnchorPane();
+
             Label postLabel = new Label(
                     "@" + postDocs.getString("username") + "\n" +
-                    new Date((long) postDocs.get("date")).toString() + "\n" +
+                    new Date(postDocs.getLong("date")).toString() + "\n" +
                     postDocs.getString("post") + "\n" +
-                    "-----"
+                    "--------------------"
             );
-
             postLabel.setWrapText(true);
+
+            // only creating delete button if it's user's own post
+            if (postDocs.getString("username").equals(fbl.getUsername())) {
+                Button deleteButton = new Button("✖");
+                deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        //System.out.println("deleting this post. post date = " + postDocs.getLong("date"));
+
+                        // have popup window confirming delete
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("FacebookLite");
+                        alert.setHeaderText("Deleting post");
+                        alert.setContentText("Are you sure you want to delete this post?");
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            fbl.deletePost(postDocs.getString("username"), postDocs.getLong("date"));
+                            buildHomepagePosts();
+                        }
+                        else {
+                            System.out.println("cancel delete");
+                        }
+                    }
+                });
+
+                postPanel.getChildren().addAll(postLabel, deleteButton);
+
+                postPanel.setRightAnchor(deleteButton, 5.0);
+            }
+            else {
+                postPanel.getChildren().add(postLabel);
+            }
+
 
             // TODO add double click or something to delete post?
             //postLabel.addEventHandler();
 
-            postsVBox.getChildren().add(postLabel);
+            postsVBox.getChildren().add(postPanel);
         }
 
         // add VBox to scrollPanel
