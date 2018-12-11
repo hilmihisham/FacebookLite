@@ -53,4 +53,7 @@ public class HomePageUIController {
         fbl.logout();
         gui.loadLoginPage();
     }
+    public void Post() throws Exception {
+
+    }
 }
