@@ -5,13 +5,18 @@ public class ProfileUIController {
     GUIManager gui;
     FBLManager fbl;
 
-    public void initialize(GUIManager gui, FBLManager fbl){
-        this.gui = gui;
-        this.fbl = fbl;
-    }
-
     @FXML
     TextField ProfileUIUserName;
 
+    public void initialize(GUIManager gui, FBLManager fbl){
+        this.gui = gui;
+        this.fbl = fbl;
+
+        ProfileUIUserName.setText(fbl.getFirstName());
+    }
+
+    public void back() throws Exception {
+        gui.loadHomePage();
+    }
 
 }

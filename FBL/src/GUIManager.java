@@ -56,7 +56,7 @@ public class GUIManager {
         scene.setRoot(root);
     }
 
-    public void loadProfileUIPage() throws Exception{
+    public void loadProfileUIPage() throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileUI.fxml"));
         Parent root = loader.load();
         ProfileUIController profile = loader.getController();
@@ -64,7 +64,7 @@ public class GUIManager {
         scene.setRoot(root);
     }
 
-    public void loadSettingUIPage() throws Exception{
+    public void loadSettingUIPage() throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SettingsUI.fxml"));
         Parent root = loader.load();
         SettingsUIController settings = loader.getController();

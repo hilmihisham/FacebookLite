@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -42,45 +43,39 @@
             <children>
             <AnchorPane prefHeight="135.0" prefWidth="380.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                <children>
-                  <Label text="Post to Wall" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="3.0" />
+                  <Label text="Post to Wall" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="2.0" />
                   <TextArea fx:id="postTextArea" prefHeight="60.0" promptText="What're you thinking?" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
-                  <Button mnemonicParsing="false" text="Post" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Button mnemonicParsing="false" onAction="#post" text="Post" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
-                <ScrollPane fitToWidth="true" layoutY="135.0" prefHeight="370.0" prefWidth="392.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="370.0" prefWidth="390.0" />
-                    </content>
-                </ScrollPane>
+                <ScrollPane fx:id="panePosts" fitToWidth="true" layoutY="135.0" prefHeight="370.0" prefWidth="392.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" />
             </children>
         </AnchorPane>
     </center>
     <left>
         <AnchorPane prefHeight="530.0" prefWidth="210.0" BorderPane.alignment="CENTER">
             <children>
-                <Pane prefHeight="265.0" prefWidth="214.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane layoutX="13.0" layoutY="26.0" prefHeight="330.0" prefWidth="210.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                <children>
-                  <Label fx:id="name" layoutX="13.0" layoutY="133.0" prefHeight="21.0" prefWidth="188.0" text="Name" textAlignment="CENTER">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Label>
-                  <Label fx:id="age" layoutX="13.0" layoutY="160.0" prefHeight="21.0" prefWidth="188.0" text="Age" textAlignment="CENTER">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="status" layoutX="13.0" layoutY="187.0" prefHeight="75.0" prefWidth="188.0" text="Status" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="90.0" fitWidth="90.0" layoutX="62.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="55.0" layoutY="79.0" onMouseClicked="#viewOwnProfile" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="79.0">
                      <image>
                         <Image url="@Resources/trollface_facebook_avatar.png" />
                      </image>
                   </ImageView>
-               </children></Pane>
-                <Pane layoutX="14.0" layoutY="265.0" prefHeight="265.0" prefWidth="215.0" AnchorPane.bottomAnchor="0.0" />
+                  <Label fx:id="name" prefHeight="65.0" prefWidth="190.0" text="Admin FacebookLite" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="15.0">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="age" layoutX="10.0" layoutY="171.0" text="Age" textAlignment="CENTER" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="171.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="status" layoutX="10.0" layoutY="203.0" text="Status" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="203.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="14.0" layoutY="260.0" prefHeight="181.0" prefWidth="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
             </children>
         </AnchorPane>
     </left>

@@ -16,16 +16,21 @@ public class FBLManager {
     private boolean hideAge;
     private boolean hideStatus;
 
+    public UserDoc doc;
+    public UserPosts userPost;
+
     public FBLManager() {
         dbc = new DatabaseController();
         userName = fName = lName = status = "";
         age = 18;
         hideFriends = hidePosts = hideAge = hideStatus = false;
+
+        userPost = new UserPosts();
     }
 
     public boolean login(String user, String pass) {
         //Attempt to login with given username and password
-        UserDoc doc = new UserDoc();
+        doc = new UserDoc();
         if(dbc.loginUser(user, pass, doc)) { // find matching credential in db
             userName = user;
             //load in user settings:
@@ -126,10 +131,18 @@ public class FBLManager {
         dbc.createNewPost(userName, postText);
     }
 
-    public void getPosts(ArrayList<Document> userPost) {
-        //Get all posts made by the logged in user.
+    // get our following + our own posts
+    public void getHomepagePosts() {
+        if (userName.equals(""))
+            return;
+        dbc.getEveryonePosts(userName, userPost);
+    }
+
+    // Get all posts from the other user we clicked on
+    // if that user has made their posts private, it'll be empty ArrayList
+    public void getPosts(String un) {
         if(userName.equals(""))
             return;
-        dbc.getUserPost(userName, userPost);
+        dbc.getOneUserPost(un, userPost);
     }
 }

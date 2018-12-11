@@ -111,7 +111,7 @@ public class DatabaseController {
         return exist;
     }
 
-    // login to account, TODO decide to use User class or create new, or just use db data to set up text in GUI
+    // login to account
     public boolean loginUser(String username, String password, UserDoc doc) {
 
         boolean isSuccess = false;
@@ -184,39 +184,60 @@ public class DatabaseController {
 
     // get sorted post from this one user
     // can be used when we visiting other people's profile
-    public void getUserPost(String un, ArrayList<Document> userPost) {
+    public void getOneUserPost(String un, UserPosts up) {
 
-        // accessing posts table
-        MongoCollection<Document> postColl = db.getCollection("postsRecord");
+        // see if that user have made their posts private or not
+        boolean isPrivate = false;
 
-        //TODO Hilmi, i made this change below (and added new argument above)
-        //ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
-        userPost.clear();
+        // accessing registeredUser table (collection)
+        MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
-        // TODO sorting date, since we change it to long format
-        FindIterable<Document> postDocs = postColl
-                .find(Filters.eq("username", un)) // get all documents from this user
-                .sort(Sorts.descending("date")); // sorts by newest post first
-
-        MongoCursor<Document> cursor = postDocs.iterator(); // set up cursor to iterate rows of documents
+        FindIterable<Document> docOne = collRU.find(Filters.eq("username", un)); // find document by filters
+        MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
         try {
-            while (cursor.hasNext()) {
-                //System.out.println(cursor.next().toJson()); // print username's document in String
-                userPost.add(cursor.next()); // add every post Documents into allPosts
+            while (cursor1.hasNext()) {
+                isPrivate = (boolean) cursor1.next().get("hideposts");
             }
         } finally {
-            cursor.close();
+            cursor1.close();
         }
 
-        // print
-        for (Document post: userPost) {
-            System.out.println(post.toJson());
+        if (!isPrivate) {
+            // accessing posts table
+            MongoCollection<Document> postColl = db.getCollection("postsRecord");
+
+            //ArrayList<Document> userPost = new ArrayList<>(); // all posts from this user will be in here
+            if (!up.postDocs.isEmpty())
+                up.postDocs.clear(); // clearing out the arrayList first
+
+            FindIterable<Document> postDocs = postColl
+                    .find(Filters.eq("username", un)) // get all documents from this user
+                    .sort(Sorts.descending("date")); // sorts by newest post first
+
+            MongoCursor<Document> cursor = postDocs.iterator(); // set up cursor to iterate rows of documents
+            try {
+                while (cursor.hasNext()) {
+                    //System.out.println(cursor.next().toJson()); // print username's document in String
+                    up.postDocs.add(cursor.next()); // add every post Documents into allPosts
+                }
+            } finally {
+                cursor.close();
+            }
+
+            // print
+            for (Document post : up.postDocs) {
+                System.out.println(post.toJson());
+                System.out.println("^^^ post date: " + new Date((long) post.get("date")).toString() + "\n");
+            }
+        }
+        else {
+            System.out.println(un + " has made their posts private");
         }
     }
 
     // get all posts from everyone we follow
     // use for homepage
-    public void getEveryonePosts(String myUN) {
+    public void getEveryonePosts(String myUN, UserPosts up) {
 
         // get who I'm following
         ArrayList<String> following = getFollowList(myUN);
@@ -224,7 +245,8 @@ public class DatabaseController {
         System.out.println("Follow = " + following);
 
         // hold all posts from everyone I follow here
-        ArrayList<Document> allPosts = new ArrayList<>();
+        //ArrayList<Document> allPosts = new ArrayList<>();
+        if (!up.postDocs.isEmpty()) up.postDocs.clear();
 
         // accessing posts table
         MongoCollection<Document> postColl = db.getCollection("postsRecord");
@@ -241,14 +263,14 @@ public class DatabaseController {
 
                 // if I follow user of current document
                 if (following.contains(cursorUN))
-                    allPosts.add(currCursor); // add that post into allPosts
+                    up.postDocs.add(currCursor); // add that post into postDocs
             }
         } finally {
             cursor.close();
         }
 
         // print
-        for (Document post: allPosts) {
+        for (Document post: up.postDocs) {
             System.out.println(post.toJson());
         }
     }
@@ -312,9 +334,7 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
         // updating user database
         collRU.findOneAndUpdate(
-                and(
-                        eq("username", un)
-                ),
+                eq("username", un),
                 Updates.set("age", age)
         );
     }
@@ -324,9 +344,7 @@ public class DatabaseController {
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
         // updating user database
         collRU.findOneAndUpdate(
-                and(
-                        eq("username", un)
-                ),
+                eq("username", un),
                 and(
                         Updates.set("hidefriends", friends),
                         Updates.set("hideposts",posts),
@@ -428,11 +446,13 @@ public class DatabaseController {
         //System.out.println(dbc.getFollowList("admin"));
         //dbc.followingOtherUser("test", "hilmi");
 
-        //dbc.createNewPost("test", "testpost");
+        //dbc.createNewPost("tom", "yes it is..");
         //dbc.getUserPost("tom");
         //dbc.getEveryonePosts("admin");
 
         //dbc.deletePost("test", 61505317734509L);
         //dbc.deletePost("test", new Date());
+        //dbc.setAge("hilmi", 100);
+        //dbc.getOneUserPost("hughman", new UserPosts());
     }
 }
