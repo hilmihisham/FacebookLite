@@ -209,4 +209,5 @@ public class HomePageUIController {
     public void viewOwnProfile() throws Exception {
         gui.loadProfileUIPage();
     }
+    
 }
