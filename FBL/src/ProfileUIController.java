@@ -42,8 +42,10 @@ public class ProfileUIController {
         buildSceneLayout();
 
         loadUserData();
-        buildUserPost();
-        buildFriendsList();
+        if(!doc.getHidePosts())
+            buildUserPost();
+        if(!doc.getHideFriends())
+            buildFriendsList();
 
 //        if(fbl.getIsFriend()){
 //            addRemoveFriend.setText("Remove Friend");
