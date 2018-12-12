@@ -156,16 +156,18 @@ public class ProfileUIController {
         name.setText(doc.getFirstName() + " " + doc.getLastName());
     }
 
-    public void addRemoveFriend(){
+    public void addRemoveFriend() throws Exception{
         if(fbl.getIsFriend()){
             fbl.removeFriend(userName);
             addRemoveFriend.setText("Add Friend");
-            fbl.setFriend(userName);
+            //fbl.setFriend(userName);
+            back();
         }
         else{
             fbl.addFriend(userName);
             addRemoveFriend.setText("Remove Friend");
-            fbl.setFriend(userName);
+            //fbl.setFriend(userName);
+            back();
         }
     }
 }
