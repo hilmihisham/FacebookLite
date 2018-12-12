@@ -160,10 +160,12 @@ public class ProfileUIController {
         if(fbl.getIsFriend()){
             fbl.removeFriend(userName);
             addRemoveFriend.setText("Add Friend");
+            fbl.setFriend(userName);
         }
         else{
             fbl.addFriend(userName);
             addRemoveFriend.setText("Remove Friend");
+            fbl.setFriend(userName);
         }
     }
 }

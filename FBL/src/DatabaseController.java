@@ -279,8 +279,11 @@ public class DatabaseController {
         // accessing follow list table (collection)
         MongoCollection<Document> followColl = db.getCollection("followList");
 
+        getFollowList(me, uf);
+
         // remove other user on my following list
         if (!uf.friendsList.isEmpty()) uf.friendsList.remove(other);
+        if (uf.friendsList.contains(me)) uf.friendsList.remove(me);
 
         // updating database
         followColl.findOneAndUpdate(
@@ -342,8 +345,13 @@ public class DatabaseController {
         // get the ArrayList of who "me" is following
         //ArrayList<String> following = getFollowList(me);
 
+        if (!uf.friendsList.isEmpty()) uf.friendsList.clear();
+
+        getFollowList(me, uf);
+
         // adding other user to my following list
-        if (!uf.friendsList.isEmpty()) uf.friendsList.add(other);
+        uf.friendsList.add(other);
+        if (uf.friendsList.contains(me)) uf.friendsList.remove(me);
 
         // updating database
         followColl.findOneAndUpdate(
