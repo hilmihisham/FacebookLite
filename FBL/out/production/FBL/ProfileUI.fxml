@@ -56,14 +56,14 @@
                </font>
             </Label>
             <Label fx:id="status" alignment="TOP_CENTER" layoutX="10.0" layoutY="244.0" prefHeight="284.0" prefWidth="190.0" text="Status" textAlignment="CENTER" wrapText="true" />
-            <Button fx:id="addRemoveFriend" layoutX="43.0" layoutY="183.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="124.0" text="Remove Friend" />
+            <Button fx:id="addRemoveFriend" layoutX="43.0" layoutY="183.0" mnemonicParsing="false" onAction="#addRemoveFriend" prefHeight="31.0" prefWidth="124.0" text="Remove Friend" />
          </children>
         </AnchorPane>
     </left>
    <right>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fx:id="paneFriends" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
+            <ScrollPane fx:id="paneFriends" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
             <Label layoutX="5.0" layoutY="1.0" prefHeight="25.0" prefWidth="126.0" text="Friends List">
                <font>
                   <Font size="22.0" />

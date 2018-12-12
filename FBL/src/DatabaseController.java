@@ -275,6 +275,20 @@ public class DatabaseController {
         }
     }
 
+    public void removeFriend(String me, String other, UserFriends uf) {
+        // accessing follow list table (collection)
+        MongoCollection<Document> followColl = db.getCollection("followList");
+
+        // remove other user on my following list
+        if (!uf.friendsList.isEmpty()) uf.friendsList.remove(other);
+
+        // updating database
+        followColl.findOneAndUpdate(
+                eq("username", me),
+                Updates.set("following", uf.friendsList)
+        );
+    }
+
     // get the list of who this user follow, send it back to UserFriends class
     public void getFollowList(String un, UserFriends uf) {
         // accessing follow list table (collection)

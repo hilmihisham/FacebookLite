@@ -124,7 +124,7 @@ public class ForgotPasswordController {
         }
         //if answer not match
         else if (!answer.equals(userData.answer)) {
-            answerErrorNotice.setText("Answer not matched. Password is not reset.");
+            answerErrorNotice.setText("Invalid answer.");
             answerErrorNotice.setVisible(true);
         }
         else {
@@ -144,7 +144,7 @@ public class ForgotPasswordController {
 
             //if answer not match
             if (!answer.equals(userData.answer)) {
-                answerErrorNotice.setText("Answer not matched. Password is not reset.");
+                answerErrorNotice.setText("Invalid answer.");
                 answerErrorNotice.setVisible(true);
             }
             else {
@@ -155,7 +155,7 @@ public class ForgotPasswordController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("FacebookLite");
                 alert.setHeaderText("Reset password");
-                alert.setContentText("Reset complete. Your password have been successfully changed.");
+                alert.setContentText("Your password has been successfully reset.");
                 alert.showAndWait();
 
                 // call back() to jump to login page

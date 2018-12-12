@@ -45,9 +45,16 @@ public class ProfileUIController {
         buildUserPost();
         buildFriendsList();
 
+//        if(fbl.getIsFriend()){
+//            addRemoveFriend.setText("Remove Friend");
+//        }
+//        else{
+//            addRemoveFriend.setText("Add Friend");
+//        }
+
         if(userName.equals(fbl.getUsername()))
             addRemoveFriend.setVisible(false);
-        else if (fbl.isFriend) {
+        else if (fbl.getIsFriend()) {
             addRemoveFriend.setVisible(true);
             addRemoveFriend.setText("Remove friend");
         }
@@ -119,7 +126,7 @@ public class ProfileUIController {
             paneFriends.setContent(friendsVBox);
         }
         else {
-            Label noFriend = new Label("This user have not followed anyone yet.");
+            Label noFriend = new Label("This user has not\nfollowed anyone yet.");
             //friendsVBox.getChildren().addListener(noFriend);
             paneFriends.setContent(noFriend);
         }
@@ -137,7 +144,7 @@ public class ProfileUIController {
 
     private void loadUserData(){
         if(!doc.getHideAge())
-            age.setText("" + doc.getAge());
+            age.setText("Age: " + doc.getAge());
         else
             age.setText("");
 
@@ -149,4 +156,14 @@ public class ProfileUIController {
         name.setText(doc.getFirstName() + " " + doc.getLastName());
     }
 
+    public void addRemoveFriend(){
+        if(fbl.getIsFriend()){
+            fbl.removeFriend(userName);
+            addRemoveFriend.setText("Add Friend");
+        }
+        else{
+            fbl.addFriend(userName);
+            addRemoveFriend.setText("Remove Friend");
+        }
+    }
 }

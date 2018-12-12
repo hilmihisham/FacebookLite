@@ -104,6 +104,10 @@ public class FBLManager {
         return friend;
     }
 
+    public boolean getIsFriend(){
+        return isFriend;
+    }
+
     public int getAge(){
         return age;
     }
@@ -197,5 +201,13 @@ public class FBLManager {
 
     public void getMyFriends() {
         dbc.getFollowList(userName, friendList);
+    }
+
+    public void addFriend(String user){
+        dbc.followingOtherUser(userName,user,friendList);
+    }
+
+    public void removeFriend(String user){
+        dbc.removeFriend(userName,user,friendList);
     }
 }
