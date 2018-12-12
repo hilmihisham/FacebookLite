@@ -285,6 +285,9 @@ public class DatabaseController {
         //System.out.println(followDoc.toJson());
 
         // get username of everyone that this user is following into UserFriends class
+        if (!uf.friendsList.isEmpty())
+            uf.friendsList.clear();
+
         uf.friendsList.addAll((ArrayList<String>) followDoc.get("following"));
 
         // debugging
@@ -299,6 +302,9 @@ public class DatabaseController {
     public void getSuggestedFriends(String un, UserFriends uf) {
         // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
+
+        if (!uf.suggestion.isEmpty())
+            uf.suggestion.clear();
 
         FindIterable<Document> allDocs = collRU.find(); // get all documents
         MongoCursor<Document> cursor = allDocs.iterator(); // set up cursor to iterate rows of documents
@@ -370,23 +376,27 @@ public class DatabaseController {
     }
 
     // can be use to get friend's profile, TODO limit of what data we can get from this
-    public void getUser(String un) {
+    public UserDoc getUser(String un) {
 
         // accessing registeredUser table (collection)
         MongoCollection<Document> collRU = db.getCollection("registeredUser");
 
         // ----- get document of given username from registeredData -----
+        UserDoc doc = new UserDoc();
 
         System.out.println("\nPrint " + un + "\'s data\n--------------------\n");
         FindIterable<Document> docOne = collRU.find(Filters.eq("username", un)); // find document by filters
         MongoCursor<Document> cursor1 = docOne.iterator(); // set up cursor to iterate rows of documents
         try {
             while (cursor1.hasNext()) {
-                System.out.println(cursor1.next().toJson()); // print username's document in String
+                doc.doc = cursor1.next();
+                return doc;
             }
         } finally {
             cursor1.close();
         }
+
+        return null;
     }
 
     public boolean getDataToResetPassword(String un, ForgotPasswordController.UserData ud) {

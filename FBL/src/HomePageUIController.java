@@ -107,7 +107,6 @@ public class HomePageUIController {
             }
 
 
-            // TODO add double click or something to delete post?
             //postLabel.addEventHandler();
 
             postsVBox.getChildren().add(postPanel);
@@ -118,6 +117,9 @@ public class HomePageUIController {
     }
 
     private void buildFriendsList() {
+        //fbl.getMyFriends();
+        fbl.getFriendsList();
+
         // VBox of holding all friends' username
         VBox friendsVBox = new VBox(5);
 
@@ -131,6 +133,11 @@ public class HomePageUIController {
                 public void handle(ActionEvent event) {
                     System.out.println("Jumping to " + friendButton.getText() + " profile..");
                     System.out.println(name);
+                    try {
+                        viewFriendProfile(name);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -141,6 +148,8 @@ public class HomePageUIController {
     }
 
     private void buildSuggestionList() {
+        fbl.getSuggestedFriends();
+
         // VBox of holding all friends' username
         VBox suggestVBox = new VBox(5);
 
@@ -156,6 +165,11 @@ public class HomePageUIController {
                 public void handle(ActionEvent event) {
                     System.out.println("Jumping to " + friendButton.getText() + " profile..");
                     System.out.println(name);
+                    try {
+                        viewFriendProfile(name);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -167,25 +181,20 @@ public class HomePageUIController {
 
     private void loadUserData(){
         name.setText(fbl.getFirstName() + " " + fbl.getLastName());
-        name.setAlignment(Pos.CENTER);
-
-        if(fbl.getHideAge() == false) {
-            age.setText("Age: " + fbl.getAge());
-            age.setAlignment(Pos.CENTER);
-        }
-        else
-            age.setText("");
-
-        if(fbl.getHideStatus() == false) {
-            status.setText(fbl.getStatus());
-            status.setAlignment(Pos.CENTER);
-        }
-        else
-            status.setText("");
+        age.setText("Age: " + fbl.getAge());
+        status.setText(fbl.getStatus());
     }
 
     @FXML
-    public void profile() throws Exception{
+    public void viewOwnProfile() throws Exception{
+        //view the profile of the logged in user
+        fbl.setFriend(fbl.getUsername());
+        gui.loadProfileUIPage();
+    }
+
+    public void viewFriendProfile(String other) throws Exception{
+        //View the profile of a friend
+        fbl.setFriend(other);
         gui.loadProfileUIPage();
     }
 
@@ -209,10 +218,4 @@ public class HomePageUIController {
             postTextArea.setText("");
         }
     }
-
-    // when we clicked on our profile picture
-    public void viewOwnProfile() throws Exception {
-        gui.loadProfileUIPage();
-    }
-    
 }

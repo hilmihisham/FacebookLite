@@ -10,11 +10,14 @@ public class FBLManager {
     private String fName;
     private String lName;
     private String status;
+    private String friend;
     private int age;
     private boolean hideFriends;
     private boolean hidePosts;
     private boolean hideAge;
     private boolean hideStatus;
+
+    public boolean isFriend;
 
     public UserDoc doc;
     public UserPosts userPost;
@@ -22,7 +25,7 @@ public class FBLManager {
 
     public FBLManager() {
         dbc = new DatabaseController();
-        userName = fName = lName = status = "";
+        userName = fName = lName = status = friend = "";
         age = 18;
         hideFriends = hidePosts = hideAge = hideStatus = false;
 
@@ -57,17 +60,17 @@ public class FBLManager {
             return false;
     }
 
-    private void getFriendsList() {
+    public void getFriendsList() {
         dbc.getFollowList(userName, friendList);
     }
 
-    private void getSuggestedFriends() {
+    public void getSuggestedFriends() {
         dbc.getSuggestedFriends(userName, friendList);
     }
 
     public void logout() {
         //Logout of current user profile
-        userName = fName = lName = status = "";
+        userName = fName = lName = status = friend = "";
         age = 18;
         hideFriends = hidePosts = hideAge = hideStatus = false;
     }
@@ -75,6 +78,10 @@ public class FBLManager {
     public boolean register(String user, String pass, String fName, String lName,String sQuestion, String sAnswer, int age) {
         //Attempt to register new user with given credentials
         return dbc.registerNewUser(user, pass, fName, lName, sQuestion, sAnswer, age);
+    }
+
+    public UserDoc getUser(String un){
+        return dbc.getUser(un);
     }
 
     public String getUsername() {
@@ -91,6 +98,10 @@ public class FBLManager {
 
     public String getStatus(){
         return status;
+    }
+
+    public String getFriend(){
+        return friend;
     }
 
     public int getAge(){
@@ -111,6 +122,15 @@ public class FBLManager {
 
     public boolean getHideStatus(){
         return hideStatus;
+    }
+
+    public void setFriend(String friend){
+        this.friend = friend;
+        dbc.getFollowList(userName, friendList);
+        if (friendList.friendsList.contains(friend))
+            isFriend = true;
+        else
+            isFriend = false;
     }
 
     public void setStatus(String status){
@@ -169,5 +189,13 @@ public class FBLManager {
         if (un.equals(userName)) {
             dbc.deletePost(un, date);
         }
+    }
+
+    public void getOtherFriendsList() {
+        dbc.getFollowList(friend, friendList);
+    }
+
+    public void getMyFriends() {
+        dbc.getFollowList(userName, friendList);
     }
 }

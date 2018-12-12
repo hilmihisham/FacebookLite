@@ -3,14 +3,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProfileUIController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProfileUIController">
     <top>
         <AnchorPane prefHeight="70.0" prefWidth="800.0" styleClass="topbar" stylesheets="@CommonStyles.css" BorderPane.alignment="CENTER">
             <children>
@@ -29,42 +28,42 @@
     <center>
         <AnchorPane prefHeight="530.0" prefWidth="390.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
-               <content>
-                  <TextArea prefHeight="488.0" prefWidth="372.0" />
-               </content>
-            </ScrollPane>
             <Label prefHeight="26.0" prefWidth="100.0" text="Posts">
                <font>
                   <Font size="22.0" />
                </font>
             </Label>
+            <ScrollPane fx:id="panePosts" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
          </children>
         </AnchorPane>
     </center>
     <left>
         <AnchorPane prefHeight="530.0" prefWidth="210.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="30.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
-               <image>
-                  <Image url="@Resources/profile-placeholder.jpg" />
-               </image></ImageView>
-            <Label fx:id="ProfileNameLabel" layoutX="30.0" layoutY="175.0" prefHeight="28.0" prefWidth="151.0" text="Name" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="190.0">
+            <Label fx:id="name" alignment="TOP_CENTER" layoutX="10.0" layoutY="17.0" prefHeight="65.0" prefWidth="190.0" text="First Last" textAlignment="CENTER" wrapText="true">
                <font>
-                  <Font size="15.0" />
+                  <Font name="System Bold" size="20.0" />
                </font>
             </Label>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="55.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Resources/trollface_facebook_avatar.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="age" alignment="TOP_CENTER" layoutX="89.0" layoutY="214.0" text="Age" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="status" alignment="TOP_CENTER" layoutX="10.0" layoutY="244.0" prefHeight="284.0" prefWidth="190.0" text="Status" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="addRemoveFriend" layoutX="43.0" layoutY="183.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="124.0" text="Remove Friend" />
          </children>
         </AnchorPane>
     </left>
    <right>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="179.0" />
-              </content>
-            </ScrollPane>
+            <ScrollPane fx:id="paneFriends" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
             <Label layoutX="5.0" layoutY="1.0" prefHeight="25.0" prefWidth="126.0" text="Friends List">
                <font>
                   <Font size="22.0" />
