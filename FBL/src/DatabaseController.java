@@ -237,7 +237,7 @@ public class DatabaseController {
 
     // get all posts from everyone we follow
     // use for homepage
-    public void getEveryonePosts(String myUN, UserPosts up, ArrayList<String> following) {
+    public void getEveryonePosts(String myUN, UserPosts up, UserFriends uf) {
 
         // get who I'm following
         //ArrayList<String> following = getFollowList(myUN);
@@ -246,7 +246,10 @@ public class DatabaseController {
 
         // hold all posts from everyone I follow here
         //ArrayList<Document> allPosts = new ArrayList<>();
-        if (!up.postDocs.isEmpty()) up.postDocs.clear();
+        //if (!up.postDocs.isEmpty())
+        up.postDocs.clear();
+
+        getFollowList(myUN, uf);
 
         // accessing posts table
         MongoCollection<Document> postColl = db.getCollection("postsRecord");
@@ -262,7 +265,7 @@ public class DatabaseController {
                 //System.out.println("cursorUN = " + cursorUN);
 
                 // if post by me or I follow user of current document
-                if (cursorUN.equals(myUN) || following.contains(cursorUN))
+                if (cursorUN.equals(myUN) || uf.friendsList.contains(cursorUN))
                     up.postDocs.add(currCursor); // add that post into postDocs
             }
         } finally {

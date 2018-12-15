@@ -178,7 +178,7 @@ public class FBLManager {
     public void getHomepagePosts() {
         if (userName.equals(""))
             return;
-        dbc.getEveryonePosts(userName, userPost, friendList.friendsList);
+        dbc.getEveryonePosts(userName, userPost, friendList);
     }
 
     // Get all posts from the other user we clicked on
