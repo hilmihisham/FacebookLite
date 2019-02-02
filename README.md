@@ -1,6 +1,11 @@
-# Project-4
+# FacebookLite
+Offline "Fakebook" using JavaFX for its GUI and MongoDB for the database. This is a group project made for my CSUN COMP585 (Graphical User Interface) class. 
 
-Note:
+As per the requirement, the user is able to register and login to their account, reset their password, and toggle privacy setting for their friends list, posts, age, and status. 
+
+In the database, users' password was encrypted with **SHA-256 hashing** using Java inbuilt `MessageDigest` class. The simple implementation of this encryption can be seen in the code [here](https://github.com/hilmihisham/FacebookLite/blob/master/FBL/src/SHAEncryption.java)
+
+## Note:
 
 Command to change to database path
 ```
